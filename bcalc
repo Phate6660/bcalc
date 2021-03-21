@@ -21,7 +21,8 @@ for i in "${args_array[@]}"; do
         if [[ "$i" =~ ^[0-9]+$ ]]; then
             n2_array+=("$i")
         else 
-            # Break out of the for loop and continue on with the script.
+            # TODO: Figure out when to break at the right time.
+            # Currently it's faulty and all numbers get assigned to the first number array.
             break
         fi
     fi
@@ -35,8 +36,8 @@ for i in "${args_array[@]}"; do
     fi
 done
 
-# TODO: For some reason, my lexer adds an extra element to the first array, find out what's causing that.
-# Example: ./bcalc 11+1 resulted in 111+1 before adding the `unset` line below.
+# This is a temporary workaround to the break issue,
+# though it only works if the right side of math operation is one number.
 unset "n1_array[-1]"
 
 # Create a variable for each number that has all elements of the respective arrays with spaces removed.
