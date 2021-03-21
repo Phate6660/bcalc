@@ -14,6 +14,5 @@ I made sure to thouroughly comment the script, feel free to check it out if you'
 
 ## TODO
 
-- Fix a problem with the lexer assigning all numbers to the first number array (very important)
 - Support PEMDAS
 - Support decimals

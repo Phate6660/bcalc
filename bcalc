@@ -20,10 +20,6 @@ for i in "${args_array[@]}"; do
     if [ -n "$op" ]; then
         if [[ "$i" =~ ^[0-9]+$ ]]; then
             n2_array+=("$i")
-        else 
-            # TODO: Figure out when to break at the right time.
-            # Currently it's faulty and all numbers get assigned to the first number array.
-            break
         fi
     fi
     # Check if "$i" is a number, and if so, append to to the first number's array.
@@ -36,9 +32,11 @@ for i in "${args_array[@]}"; do
     fi
 done
 
-# This is a temporary workaround to the break issue,
-# though it only works if the right side of math operation is one number.
-unset "n1_array[-1]"
+# Found a solution. There is no need to break. 
+# Just use a for loop on n2_array and run `unset "n1_array[-1]"` for each one!
+for i in "${n2_array[@]}"; do
+    unset "n1_array[-1]"
+done
 
 # Create a variable for each number that has all elements of the respective arrays with spaces removed.
 n1_pre="${n1_array[*]}"
