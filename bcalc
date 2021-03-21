@@ -37,7 +37,7 @@ done
 
 # TODO: For some reason, my lexer adds an extra element to the first array, find out what's causing that.
 # Example: ./bcalc 11+1 resulted in 111+1 before adding the `unset` line below.
-unset n1_array[-1]
+unset "n1_array[-1]"
 
 # Create a variable for each number that has all elements of the respective arrays with spaces removed.
 n1_pre="${n1_array[*]}"
