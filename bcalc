@@ -40,8 +40,10 @@ done
 unset n1_array[-1]
 
 # Create a variable for each number that has all elements of the respective arrays with spaces removed.
-n1="$(echo "${n1_array[@]}" | sed "s/ //g")"
-n2="$(echo "${n2_array[@]}" | sed "s/ //g")"
+n1_pre="${n1_array[*]}"
+n1="${n1_pre// /}"
+n2_pre="${n2_array[*]}"
+n2="${n2_pre// /}"
 
 # Case the math operation then do the actual math.
 case "$op" in
