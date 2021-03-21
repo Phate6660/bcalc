@@ -1,0 +1,53 @@
+#!/bin/bash
+# A calculator in pure-bash.
+# I even made a pure-bash lexer for this.
+# Not gonna lie I feel pretty accomplished right now.
+
+# Get all args, and split each character by newline.
+args="$(echo "$@" | grep -o .)"
+
+# Read each newline-separated character into an array.
+read -d '\n' -a args_array <<< "$args"
+
+# Set empty arrays to be appended to later.
+n1_array=()
+n2_array=()
+
+# Iterate over the argument array.
+for i in "${args_array[@]}"; do
+    # Check if the operator is set. 
+    # If it is, there is no need to append to the first number's array.
+    if [ -n "$op" ]; then
+        if [[ "$i" =~ ^[0-9]+$ ]]; then
+            n2_array+=("$i")
+        else 
+            # Break out of the for loop and continue on with the script.
+            break
+        fi
+    fi
+    # Check if "$i" is a number, and if so, append to to the first number's array.
+    if [[ "$i" =~ ^[0-9]+$ ]]; then
+        n1_array+=("$i")
+    fi
+    # Check if "$i" is a math operation, and if so, set the "$op" var to it.
+    if [ "$i" == "*" ] || [ "$i" == "/" ] || [ "$i" == "+" ] || [ "$i" == "-" ]; then
+        op="$i"
+    fi
+done
+
+# TODO: For some reason, my lexer adds an extra element to the first array, find out what's causing that.
+# Example: ./bcalc 11+1 resulted in 111+1 before adding the `unset` line below.
+unset n1_array[-1]
+
+# Create a variable for each number that has all elements of the respective arrays with spaces removed.
+n1="$(echo "${n1_array[@]}" | sed "s/ //g")"
+n2="$(echo "${n2_array[@]}" | sed "s/ //g")"
+
+# Case the math operation then do the actual math.
+case "$op" in
+    "*") echo $(("$n1" * "$n2"));;
+    "/") echo $(("$n1" / "$n2"));;
+    "+") echo $(("$n1" + "$n2"));;
+    "-") echo $(("$n1" - "$n2"));;
+    *) echo "Sorry, $op is not a supported operation." && exit 1;;
+esac
