@@ -10,6 +10,7 @@ for ((i=0; i<${#args}; i++)); do
 done
 
 # Read each newline-separated character into an array.
+# shellcheck disable=SC2162
 read -a args_array <<< "$args_spaces"
 
 # Set empty arrays to be appended to later.
