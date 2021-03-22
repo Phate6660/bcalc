@@ -4,7 +4,7 @@
 # Not gonna lie I feel pretty accomplished right now.
 
 # Get all args, and split each character by newline.
-args="$@"
+args="$*"
 for ((i=0; i<${#args}; i++)); do
     args_spaces+="${args:$i:1} "
 done
