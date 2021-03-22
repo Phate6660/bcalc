@@ -3,7 +3,7 @@
 # I even made a pure-bash lexer for this.
 # Not gonna lie I feel pretty accomplished right now.
 
-# Get all args, and add a space betweem each character.
+# Get the first arg (since that's all we need), and add a space betweem each character.
 args="$1"
 for ((i=0; i<${#args}; i++)); do
     args_spaces+="${args:$i:1} "
