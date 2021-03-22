@@ -1,7 +1,10 @@
 #!/bin/bash
-# A calculator in pure-bash.
-# I even made a pure-bash lexer for this.
-# Not gonna lie I feel pretty accomplished right now.
+## A calculator in pure-bash.
+## I even made a pure-bash lexer for this.
+## Not gonna lie I feel pretty accomplished right now.
+## ---------------------------------------------------
+## Created by: Phate6660 [https://github.com/Phate6660]
+## Dependencies: Only bash ;)
 
 # Get the first arg (since that's all we need), and add a space betweem each character.
 args="$1"
@@ -37,6 +40,9 @@ for i in "${args_array[@]}"; do
     fi
     # Check if "$i" is a math operation, and if so, set the "$op" var to it.
     if [ "$i" == "*" ] || [ "$i" == "/" ] || [ "$i" == "+" ] || [ "$i" == "-" ]; then
+        if [ -n "$op" ]; then
+            echo "Only 2 numbers are supported for now." && exit 1
+        fi
         op="$i"
     fi
 done
