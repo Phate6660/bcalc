@@ -15,8 +15,9 @@ I made sure to thouroughly comment the script, feel free to check it out if you'
 ## TODO
 
 - Better formatted ouput (perhaps `1,000,000` instead of `1000000` for example)
-- Support PEMDAS
 - Support decimals
+- Support operating on more than two numbers
+- Support PEMDAS
 
 Off-topic from this calculator:
 
