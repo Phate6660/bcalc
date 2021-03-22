@@ -15,17 +15,19 @@ n2_array=()
 
 # Iterate over the argument array.
 for i in "${args_array[@]}"; do
-    # Check if the operator is set. 
-    # If it is, there is no need to append to the first number's array.
+    # Check if the operator is set, and append to the n2_array if so.
     if [ -n "$op" ]; then
         if [[ "$i" =~ ^[0-9]+$ ]]; then
             n2_array+=("$i")
         fi
     fi
+    # Check if "$i" is a number, and if so...
     if [[ "$i" =~ ^[0-9]+$ ]]; then
+        # If "$op" is set, continue and skip appending to n1_array.
         if [ -n "$op" ]; then
             continue
         else
+            # Otherwise append the number to the array.
             n1_array+=("$i")
         fi
     fi
@@ -35,7 +37,8 @@ for i in "${args_array[@]}"; do
     fi
 done
 
-# Create a variable for each number that has all elements of the respective arrays with spaces removed.
+# The _pre variables contain all the elements of the respective number arrays.
+# Then {n1,n2} are the contents of the _pre variables with the spaces removed.
 n1_pre="${n1_array[*]}"
 n1="${n1_pre// /}"
 n2_pre="${n2_array[*]}"
