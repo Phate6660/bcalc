@@ -4,10 +4,13 @@
 # Not gonna lie I feel pretty accomplished right now.
 
 # Get all args, and split each character by newline.
-args="$(echo "$@" | grep -o .)"
+args="$@"
+for ((i=0; i<${#args}; i++)); do
+    args_spaces+="${args:$i:1} "
+done
 
 # Read each newline-separated character into an array.
-read -d '\n' -a args_array <<< "$args"
+read -a args_array <<< "$args_spaces"
 
 # Set empty arrays to be appended to later.
 n1_array=()
