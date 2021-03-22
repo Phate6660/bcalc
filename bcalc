@@ -22,20 +22,17 @@ for i in "${args_array[@]}"; do
             n2_array+=("$i")
         fi
     fi
-    # Check if "$i" is a number, and if so, append to to the first number's array.
     if [[ "$i" =~ ^[0-9]+$ ]]; then
-        n1_array+=("$i")
+        if [ -n "$op" ]; then
+            continue
+        else
+            n1_array+=("$i")
+        fi
     fi
     # Check if "$i" is a math operation, and if so, set the "$op" var to it.
     if [ "$i" == "*" ] || [ "$i" == "/" ] || [ "$i" == "+" ] || [ "$i" == "-" ]; then
         op="$i"
     fi
-done
-
-# Found a solution. There is no need to break. 
-# Just use a for loop on n2_array and run `unset "n1_array[-1]"` for each one!
-for i in "${n2_array[@]}"; do
-    unset "n1_array[-1]"
 done
 
 # Create a variable for each number that has all elements of the respective arrays with spaces removed.
