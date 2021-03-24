@@ -19,17 +19,24 @@ read -a args_array <<< "${args_spaces}"
 # Iterate over the argument array.
 n=0
 for char in "${args_array[@]}"; do
-    # Check if "$char" is a square bracket, and if so append to final_array.
-    if [ "${char}" == "[" ] || [ "${char}" == "]" ]; then
+    # Check if "$char" is a parenthesis, and if so append to final_array.
+    if [ "${char}" == "(" ] || [ "${char}" == ")" ]; then
         final_array+=("${char}")
         continue
-    fi
+    # Check if "$char" is a square bracket, and if so append to final_array.
+    elif [ "${char}" == "[" ] || [ "${char}" == "]" ]; then
+        final_array+=("${char}")
+        continue
     # Check if "$char" is a number, and if so append to final_array.
-    if [[ "${char}" =~ ^[0-9]+$ ]]; then
+    elif [[ "${char}" =~ ^[0-9]+$ ]]; then
         final_array+=("${char}")
         continue
     # Check if "$char" is a math operation, and if so append to final_array.
-    elif [ "${char}" == "*" ] || [ "${char}" == "/" ] || [ "${char}" == "+" ] || [ "${char}" == "-" ]; then
+    elif [ "${char}" == "^" ] \
+        || [ "${char}" == "*" ] \
+        || [ "${char}" == "/" ] \
+        || [ "${char}" == "+" ] \
+        || [ "${char}" == "-" ]; then
         # Up n by 1 before and after appending the math operation to account for array index offsets.
         n=$((n + 1))
         final_array+=("${char}")
@@ -37,7 +44,7 @@ for char in "${args_array[@]}"; do
         continue
     else
         # If the character isn't a square bracket, digit, or math operation, display an error message and exit.
-        echo "Only digits, square brackets, '*', '/', '+', and '-', are supported. '${i}' is currently unsupported." && exit 1
+        echo -e "Only digits, parenthesis, square brackets, '*', '/', '+', and '-', are supported.\n'${i}' is currently unsupported." && exit 1
     fi
 done
 
@@ -53,60 +60,105 @@ for ((b=0;b<=final_array_count;b++)); do
         break
     else
         # The next 2 if statements are for dealing with brackets, which are used to signify multi-digit numbers.
-        if [ "${final_array[${b}]}" == "[" ]; then
+        if [ "${final_array[${b}]}" == "(" ]; then
+            paren=true
+            continue
+        elif [ "${final_array[${b}]}" == ")" ]; then
+            paren=false
+            ip="${ip[*]}"
+            ip="${ip// /}"
+            ip="${ip/\^/\*\*}"
+            ip=$(("${ip}"))
+            if [ "$2" == "--debug" ]; then
+                echo "ip = ${ip}"
+            fi
+            number_array+=("$ip")
+            unset ip
+            continue
+        elif [ "${final_array[${b}]}" == "[" ]; then
             multi=true
             continue
-        fi
-        if [ "${final_array[${b}]}" == "]" ]; then
+        elif [ "${final_array[${b}]}" == "]" ]; then
             multi=false
             mn="${mn[*]}"
             mn="${mn// /}"
+            if [ "$2" == "--debug" ]; then
+                echo "mn = ${mn}"
+            fi
             number_array+=("${mn}")
             unset mn
             continue
-        fi
         # If the element is a number...
-        if [[ "${final_array[${b}]}" =~ ^[0-9]+$ ]]; then
+        elif [[ "${final_array[${b}]}" =~ ^[0-9]+$ ]]; then
             # If "$multi" hasn't been set, append to number_array like normal.
-            if [ -z "${multi}" ]; then
-                number_array+=("${final_array[${b}]}")
-                continue
-            else
+            if [ -n "${multi}" ] || [ -n "${paren}" ]; then
                 # If "$multi is true", append the contents of the element to the mn variable.
-                if [ "${multi}" == true ]; then
-                    mn+=("${final_array[${b}]}")
+                if [ "${paren}" == true ]; then
+                    ip+=("${final_array[${b}]}")
                     continue
+                elif [ "${multi}" == true ]; then
+                        mn+=("${final_array[${b}]}")
+                        continue
                 else
                     number_array+=("${final_array[${b}]}")
                     continue
                 fi
+            else
+                number_array+=("${final_array[${b}]}")
+                continue
             fi
         # If the element is an operation, append to operation_array.
-        elif [ "${final_array[${b}]}" == "*" ] || [ "${final_array[${b}]}" == "/" ] || [ "${final_array[${b}]}" == "+" ] || [ "${final_array[${b}]}" == "-" ]; then
-            operation_array+=("${final_array[${b}]}")
-            a=$((a + 1))
-            continue
+        elif [ "${final_array[${b}]}" == "^" ] \
+            || [ "${final_array[${b}]}" == "*" ] \
+            || [ "${final_array[${b}]}" == "/" ] \
+            || [ "${final_array[${b}]}" == "+" ] \
+            || [ "${final_array[${b}]}" == "-" ]; then
+            if [ -n "${paren}" ]; then
+                if [ "${paren}" == true ]; then
+                    ip+=("${final_array[${b}]}")
+                     continue
+                else
+                    operation_array+=("${final_array[${b}]}")
+                    continue
+                fi
+            else
+                operation_array+=("${final_array[${b}]}")
+                a=$((a + 1))
+                continue
+            fi
         fi
     fi
 done
 
-if [ "$2" == "--debug" ]; then
-    echo -e "number_array = ${number_array[*]}\noperation_array = ${operation_array[*]}"
-fi
 number_count="${#number_array[@]}"
 operation_count="${#operation_array[@]}"
 
-c=0
-for ((d=0;d<=final_array_count;d++)); do
-    if [ "${d}" = "${number_count}" ]; then
+if [ -n "${paren}" ] || [ -n "${multi}" ]; then
+    number_array=("${number_array[@]:2}")
+    number_count=$((number_count - 2))
+fi
+
+if [ "$2" == "--debug" ]; then
+    for ((d=0;d<=number_count;d++)); do
+        echo "number_array[$d] = ${number_array[$d]}"
+        for ((d=0;d<=operation_count;d++)); do
+            echo "operation_array[$d] = ${operation_array[$d]}"
+        done
+    done
+    echo -e "number_count = ${number_count}\noperation_count = ${operation_count}"
+fi
+
+e=0
+for ((f=0;f<=final_array_count;f++)); do
+    if [ "${f}" = "${number_count}" ]; then
         break
     else
-        calculation_array+=("${number_array[${c}]}")
-        if [ "${d}" = "${operation_count}" ]; then
+        calculation_array+=("${number_array[${e}]}")
+        if [ "${f}" == "${operation_count}" ]; then
             continue
         else
-            calculation_array+=("${operation_array[${c}]}")
-            c=$((c + 1))
+            calculation_array+=("${operation_array[${e}]}")
+            e=$((e + 1))
             continue
         fi
     fi
@@ -114,6 +166,7 @@ done
 
 calculation="${calculation_array[*]}"
 calculation="${calculation// /}"
+calculation="${calculation/\^/\*\*}"
 if [ "$2" == "--debug" ]; then
     echo "calculation = ${calculation}"
 fi
