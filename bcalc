@@ -41,6 +41,10 @@ for char in "${args_array[@]}"; do
     fi
 done
 
+if [ "$2" == "--debug" ]; then
+    echo "final_array = ${final_array[*]}"
+fi
+
 final_array_count="${#final_array[@]}"
 a=0
 for ((b=0;b<=final_array_count;b++)); do
@@ -86,6 +90,9 @@ for ((b=0;b<=final_array_count;b++)); do
     fi
 done
 
+if [ "$2" == "--debug" ]; then
+    echo -e "number_array = ${number_array[*]}\noperation_array = ${operation_array[*]}"
+fi
 number_count="${#number_array[@]}"
 operation_count="${#operation_array[@]}"
 
@@ -107,4 +114,7 @@ done
 
 calculation="${calculation_array[*]}"
 calculation="${calculation// /}"
+if [ "$2" == "--debug" ]; then
+    echo "calculation = $calculation"
+fi
 echo $(("$calculation"))

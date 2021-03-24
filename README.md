@@ -30,6 +30,23 @@ $ ./bcalc 9-1-2-3-4
 -1
 ```
 
+There is also a debug mode implemented, which is useful for when the output seems wrong.
+Here is an example:
+
+```
+$ ./bcalc [100]-[50]
+final_array = [ 1 0 0 ] - [ 5 0 ]
+number_array = 100 50
+operation_array = -
+calculation = 100-50
+50
+```
+
+- `final_array` = the comlpete array of characters that were inputted
+- `number_array` = an array of all the numbers
+- `operation_array` = an array of all the operations
+- `calculation` = the calculation to be used
+
 ## TODO
 
 - Better formatted ouput (perhaps `1,000,000` instead of `1000000` for example)
