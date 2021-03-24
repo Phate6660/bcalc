@@ -6,7 +6,7 @@
 ## Created by: Phate6660 [https://github.com/Phate6660]
 ## Dependencies: Only bash ;)
 
-# Get the first arg (since that's all we need), and add a space betweem each character.
+# Get the first arg (since that's all we need), and add a space between each character.
 args="$1"
 for ((i=0; i<${#args}; i++)); do
     args_spaces+="${args:${i}:1} "
@@ -89,6 +89,7 @@ for ((b=0;b<=final_array_count;b++)); do
             if [ "$2" == "--debug" ]; then
                 echo "mn = ${mn}"
             fi
+            # If there are parenthesis, append to ip (in parenthesis) variable.
             if [ "${paren}" == true ]; then
                 ip+=("${mn}")
             else 
@@ -98,13 +99,13 @@ for ((b=0;b<=final_array_count;b++)); do
             continue
         # If the element is a number...
         elif [[ "${final_array[${b}]}" =~ ^[0-9]+$ ]]; then
-            # If "$multi" or "$multi" is set...
+            # If "$multi" or "$paren" is set...
             if [ -n "${multi}" ] || [ -n "${paren}" ]; then
-                # If "$paren" is true, append the contents of the element to the ip variable.
+                # If "$paren" is true and "$multi" is false, append the contents of the element to the ip variable.
                 if [ "${paren}" == true ] && [ "${multi}" == false ]; then
                     ip+=("${final_array[${b}]}")
                     continue
-                # If "$multi" is true, append the contents of the element to the mn variable.
+                # Else if "$multi" is true, append the contents of the element to the mn variable.
                 elif [ "${multi}" == true ]; then
                         mn+=("${final_array[${b}]}")
                         continue
@@ -146,12 +147,14 @@ number_count="${#number_array[@]}"
 operation_count="${#operation_array[@]}"
 
 if [ "$2" == "--debug" ]; then
+    # This is useful for seeing the contents of each index of the number_array and operation_array variables.
     for ((d=0;d<=number_count;d++)); do
         echo "number_array[$d] = ${number_array[$d]}"
         for ((e=0;e<=operation_count;e++)); do
             echo "operation_array[$e] = ${operation_array[$e]}"
         done
     done
+    # This is useful to make sure that the counts in the arrays are accurate to what they should be.
     echo -e "number_count = ${number_count}\noperation_count = ${operation_count}"
 fi
 
@@ -178,4 +181,7 @@ calculation="${calculation/\^/\*\*}"
 if [ "$2" == "--debug" ]; then
     echo "calculation = ${calculation}"
 fi
+
+# Print the output in a formatted way; e.g. if there are enough numbers there would be a comma.
+# Example: 1,000,000
 printf "%'.f\n" $(("${calculation}"))
