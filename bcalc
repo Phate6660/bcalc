@@ -16,58 +16,92 @@ done
 # shellcheck disable=SC2162
 read -a args_array <<< "$args_spaces"
 
+declare -A operation_array=()
+
 # Iterate over the argument array.
 # TODO: Figure out how to create appropriately titled variables on demand.
 # I feel as though that would be the best way to solve the problem of
 # having a hardcoded amount of numbers and operators in the script.
+n=0
 for i in "${args_array[@]}"; do
     # Check if "$i" is a number, and if so...
+    if [ "$i" == "[" ] || [ "$i" == "]" ]; then
+        final_array+=("$i")
+        continue
+    fi
     if [[ "$i" =~ ^[0-9]+$ ]]; then
-        # If "$op" is set...
-        if [ -n "$op" ]; then
-            # If "$op2" is set, append to "$n3_array" and continue the for loop.
-            if [ -n "$op2" ]; then
-                n3_array+=("$i")
-                continue
-            # Else append to "$n2_array" and continue the for loop.
-            else 
-                n2_array+=("$i")
-                continue
-            fi
-        else
-            # Else append the number to "$n1_array" and continue the for loop.
-            n1_array+=("$i")
+        final_array+=("$i")
+        continue
+    # Check if "$i" is a math operation...
+    elif [ "$i" == "*" ] || [ "$i" == "/" ] || [ "$i" == "+" ] || [ "$i" == "-" ]; then
+        n=$((n + 1))
+        final_array+=("$i")
+        n=$((n + 1))
+        continue
+    else
+        echo "Only digits, '*', '/', '+', and '-', are supported. '$i' is currently unsupported." && exit 1
+    fi
+done
+
+
+final_array_count="${#final_array[@]}"
+a=0
+for ((z=0;z<=final_array_count;z++)); do
+    if [ "$z" = "$final_array_count" ]; then
+        break
+    else
+        if [ "${final_array[$z]}" == "[" ]; then
+            multi=true
             continue
         fi
-    fi
-    # Check if "$i" is a math operation...
-    if [ "$i" == "*" ] || [ "$i" == "/" ] || [ "$i" == "+" ] || [ "$i" == "-" ]; then
-        # If "$op" is set, set "$op2" to the math operation found and continue the for loop.
-        if [ -n "$op" ]; then
-            op2="$i"
+        if [ "${final_array[$z]}" == "]" ]; then
+            multi=false
+            mn="${mn[*]}"
+            mn="${mn// /}"
+            number_array+=("$mn")
+            unset mn
             continue
-        # Else set "$op" to the math operation found and continue the for loop.
-        else 
-            op="$i"
+        fi
+        if [[ "${final_array[$z]}" =~ ^[0-9]+$ ]]; then
+            if [ -z "$multi" ]; then
+                number_array+=("${final_array[$z]}")
+                continue
+            else
+                if [ "$multi" == true ]; then
+                    mn+=("${final_array[$z]}")
+                    continue
+                else
+                    number_array+=("${final_array[$z]}")
+                    continue
+                fi
+            fi
+        elif [ "${final_array[$z]}" == "*" ] || [ "${final_array[$z]}" == "/" ] || [ "${final_array[$z]}" == "+" ] || [ "${final_array[$z]}" == "-" ]; then
+            operation_array+=( ["$a"]="${final_array[$z]}" )
+            a=$((a + 1))
             continue
         fi
     fi
 done
 
-# The _pre variables contain all the elements of the respective number arrays.
-# Then {n1,n2} are the contents of the _pre variables with the spaces removed.
-n1_pre="${n1_array[*]}"
-n1="${n1_pre// /}"
-n2_pre="${n2_array[*]}"
-n2="${n2_pre// /}"
-# Check the the 3rd number array was creating by checking it's first indexed element.
-if [ -n "${n3_array[0]}" ]; then
-    n3_pre="${n3_array[*]}"
-    n3="${n3_pre// /}"
-fi
+number_count="${#number_array[@]}"
+operation_count="${#operation_array[@]}"
 
-if [ -n "$n3" ]; then
-    echo $(("$n1" "$op" "$n2" "$op2" "$n3"))
-else
-    echo $(("$n1" "$op" "$n2"))
-fi
+e=0
+for ((f=0;f<=final_array_count;f++)); do
+    if [ "$f" = "$number_count" ]; then
+        break
+    else
+        calculation_array+=("${number_array[$e]}")
+        if [ "$f" = "$operation_count" ]; then
+            continue
+        else
+            calculation_array+=("${operation_array[$e]}")
+            e=$((e + 1))
+            continue
+        fi
+    fi
+done
+
+calculation="${calculation_array[*]}"
+calculation="${calculation// /}"
+echo $(("$calculation"))
