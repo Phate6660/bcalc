@@ -17,28 +17,40 @@ done
 read -a args_array <<< "$args_spaces"
 
 # Iterate over the argument array.
+# TODO: Figure out how to create appropriately titled variables on demand.
+# I feel as though that would be the best way to solve the problem of
+# having a hardcoded amount of numbers and operators in the script.
 for i in "${args_array[@]}"; do
     # Check if "$i" is a number, and if so...
     if [[ "$i" =~ ^[0-9]+$ ]]; then
-        # If "$op" is set, continue and skip appending to n1_array.
+        # If "$op" is set...
         if [ -n "$op" ]; then
+            # If "$op" is set, append to "$n3_array" and continue the for loop.
             if [ -n "$op2" ]; then
                 n3_array+=("$i")
+                continue
+            # Else append to "$n2_array" and continue the for loop.
             else 
                 n2_array+=("$i")
+                continue
             fi
         else
-            # Otherwise append the number to the array.
+            # Else append the number to "$n1_array" and continue the for loop.
             n1_array+=("$i")
+            continue
         fi
     fi
-    # Check if "$i" is a math operation, and if so, set the "$op" var to it.
+    # Check if "$i" is a math operation...
     if [ "$i" == "*" ] || [ "$i" == "/" ] || [ "$i" == "+" ] || [ "$i" == "-" ]; then
+        # If "$op" is set, set "$op2" to the math operation found and continue the for loop.
         if [ -n "$op" ]; then
             op2="$i"
             continue
+        # Else set "$op" to the math operation found and continue the for loop.
+        else 
+            op="$i"
+            continue
         fi
-        op="$i"
     fi
 done
 
@@ -48,6 +60,7 @@ n1_pre="${n1_array[*]}"
 n1="${n1_pre// /}"
 n2_pre="${n2_array[*]}"
 n2="${n2_pre// /}"
+# Check the the 3rd number array was creating by checking it's first indexed element.
 if [ -n "${n3_array[0]}" ]; then
     n3_pre="${n3_array[*]}"
     n3="${n3_pre// /}"
