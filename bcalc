@@ -16,45 +16,44 @@ done
 # shellcheck disable=SC2162
 read -a args_array <<< "$args_spaces"
 
-declare -A operation_array=()
-
 # Iterate over the argument array.
-# TODO: Figure out how to create appropriately titled variables on demand.
-# I feel as though that would be the best way to solve the problem of
-# having a hardcoded amount of numbers and operators in the script.
 n=0
-for i in "${args_array[@]}"; do
-    # Check if "$i" is a number, and if so...
-    if [ "$i" == "[" ] || [ "$i" == "]" ]; then
-        final_array+=("$i")
+for char in "${args_array[@]}"; do
+    # Check if "$char" is a square bracket, and if so append to final_array.
+    if [ "$char" == "[" ] || [ "$char" == "]" ]; then
+        final_array+=("$char")
         continue
     fi
-    if [[ "$i" =~ ^[0-9]+$ ]]; then
-        final_array+=("$i")
+    # Check if "$char" is a number, and if so append to final_array.
+    if [[ "$char" =~ ^[0-9]+$ ]]; then
+        final_array+=("$char")
         continue
-    # Check if "$i" is a math operation...
-    elif [ "$i" == "*" ] || [ "$i" == "/" ] || [ "$i" == "+" ] || [ "$i" == "-" ]; then
+    # Check if "$char" is a math operation, and if so append to final_array.
+    elif [ "$char" == "*" ] || [ "$char" == "/" ] || [ "$char" == "+" ] || [ "$char" == "-" ]; then
+        # Up n by 1 before and after appending the math operation to account for array index offsets.
         n=$((n + 1))
-        final_array+=("$i")
+        final_array+=("$char")
         n=$((n + 1))
         continue
     else
+        # If the character isn't a square bracket, digit, or math operation, display an error message and exit.
         echo "Only digits, '*', '/', '+', and '-', are supported. '$i' is currently unsupported." && exit 1
     fi
 done
 
-
 final_array_count="${#final_array[@]}"
 a=0
-for ((z=0;z<=final_array_count;z++)); do
-    if [ "$z" = "$final_array_count" ]; then
+for ((b=0;b<=final_array_count;b++)); do
+    if [ "$b" = "$final_array_count" ]; then
+        # No more looping is needed, break.
         break
     else
-        if [ "${final_array[$z]}" == "[" ]; then
+        # The next 2 if statements are for dealing with brackets, which are used to signify multi-digit numbers.
+        if [ "${final_array[$b]}" == "[" ]; then
             multi=true
             continue
         fi
-        if [ "${final_array[$z]}" == "]" ]; then
+        if [ "${final_array[$b]}" == "]" ]; then
             multi=false
             mn="${mn[*]}"
             mn="${mn// /}"
@@ -62,21 +61,25 @@ for ((z=0;z<=final_array_count;z++)); do
             unset mn
             continue
         fi
-        if [[ "${final_array[$z]}" =~ ^[0-9]+$ ]]; then
+        # If the element is a number...
+        if [[ "${final_array[$b]}" =~ ^[0-9]+$ ]]; then
+            # If "$multi" hasn't been set, append to number_array like normal.
             if [ -z "$multi" ]; then
-                number_array+=("${final_array[$z]}")
+                number_array+=("${final_array[$b]}")
                 continue
             else
+                # If "$multi is true", append the contents of the element to the mn variable.
                 if [ "$multi" == true ]; then
-                    mn+=("${final_array[$z]}")
+                    mn+=("${final_array[$b]}")
                     continue
                 else
-                    number_array+=("${final_array[$z]}")
+                    number_array+=("${final_array[$b]}")
                     continue
                 fi
             fi
-        elif [ "${final_array[$z]}" == "*" ] || [ "${final_array[$z]}" == "/" ] || [ "${final_array[$z]}" == "+" ] || [ "${final_array[$z]}" == "-" ]; then
-            operation_array+=( ["$a"]="${final_array[$z]}" )
+        # If the element is an operation, append to operation_array.
+        elif [ "${final_array[$b]}" == "*" ] || [ "${final_array[$b]}" == "/" ] || [ "${final_array[$b]}" == "+" ] || [ "${final_array[$b]}" == "-" ]; then
+            operation_array+=("${final_array[$b]}")
             a=$((a + 1))
             continue
         fi
@@ -86,17 +89,17 @@ done
 number_count="${#number_array[@]}"
 operation_count="${#operation_array[@]}"
 
-e=0
-for ((f=0;f<=final_array_count;f++)); do
-    if [ "$f" = "$number_count" ]; then
+c=0
+for ((d=0;d<=final_array_count;d++)); do
+    if [ "$d" = "$number_count" ]; then
         break
     else
-        calculation_array+=("${number_array[$e]}")
-        if [ "$f" = "$operation_count" ]; then
+        calculation_array+=("${number_array[$c]}")
+        if [ "$d" = "$operation_count" ]; then
             continue
         else
-            calculation_array+=("${operation_array[$e]}")
-            e=$((e + 1))
+            calculation_array+=("${operation_array[$c]}")
+            c=$((c + 1))
             continue
         fi
     fi
