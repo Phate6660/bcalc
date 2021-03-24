@@ -6,13 +6,20 @@ I even managed to write a lexer for the argument input, allowing you to do `1+1`
 
 I made sure to thouroughly comment the script, feel free to check it out if you're interested!
 
-Note: Any numbers larger than one digit need to specified in a `[]`. Examples in the section below.
+## Syntax
 
+- `()` = do this first and replace with the done math
+- `[]` = denotes a multi-digit number
+- `^`  = exponent
+- `*`  = multiplication
+- `/`  = division
+- `+`  = addition
+- `-`  = subtraction
 
 ## What's supported
 
 - Basic math operations
-- Partially supported: PEMDAS (only parenthesis)
+- PEMDAS
 - Whole numbers
 
 Examples:
@@ -32,6 +39,9 @@ $ ./bcalc 9-1-2-3-4
 
 $ ./bcalc '([100]+[50])/2'
 75
+
+$ ./bcalc '([100]+[50])+2^2'
+154
 ```
 
 There is also a debug mode implemented, which is useful for when the output seems wrong.
@@ -56,13 +66,13 @@ calculation = 100-50
 - Better formatted ouput (perhaps `1,000,000` instead of `1000000` for example)
 - ~~No hard limit on number/operator count~~
 - Support decimals
-- Support PEMDAS [high priority)
+- ~~Support PEMDAS~ (bash had already mostly supported PEMDAS, just needed to support for parenthesis)
   + ~~Parenthesis~~
-  + Exponents
-  + Multiplication
-  + Division
-  + Addition
-  + Subtraction
+  + ~~Exponents~~
+  + ~~Multiplication~~
+  + ~~Division~~
+  + ~~Addition~~
+  + ~~Subtraction~~
 
 Off-topic from this calculator:
 

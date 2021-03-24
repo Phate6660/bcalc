@@ -32,7 +32,11 @@ for char in "${args_array[@]}"; do
         final_array+=("${char}")
         continue
     # Check if "$char" is a math operation, and if so append to final_array.
-    elif [ "${char}" == "*" ] || [ "${char}" == "/" ] || [ "${char}" == "+" ] || [ "${char}" == "-" ]; then
+    elif [ "${char}" == "^" ] \
+        || [ "${char}" == "*" ] \
+        || [ "${char}" == "/" ] \
+        || [ "${char}" == "+" ] \
+        || [ "${char}" == "-" ]; then
         # Up n by 1 before and after appending the math operation to account for array index offsets.
         n=$((n + 1))
         final_array+=("${char}")
@@ -63,6 +67,7 @@ for ((b=0;b<=final_array_count;b++)); do
             paren=false
             ip="${ip[*]}"
             ip="${ip// /}"
+            ip="${ip/\^/\*\*}"
             ip=$(("${ip}"))
             if [ "$2" == "--debug" ]; then
                 echo "ip = ${ip}"
@@ -103,7 +108,11 @@ for ((b=0;b<=final_array_count;b++)); do
                 continue
             fi
         # If the element is an operation, append to operation_array.
-        elif [ "${final_array[${b}]}" == "*" ] || [ "${final_array[${b}]}" == "/" ] || [ "${final_array[${b}]}" == "+" ] || [ "${final_array[${b}]}" == "-" ]; then
+        elif [ "${final_array[${b}]}" == "^" ] \
+            || [ "${final_array[${b}]}" == "*" ] \
+            || [ "${final_array[${b}]}" == "/" ] \
+            || [ "${final_array[${b}]}" == "+" ] \
+            || [ "${final_array[${b}]}" == "-" ]; then
             if [ -n "${paren}" ]; then
                 if [ "${paren}" == true ]; then
                     ip+=("${final_array[${b}]}")
@@ -130,26 +139,26 @@ if [ -n "${paren}" ] || [ -n "${multi}" ]; then
 fi
 
 if [ "$2" == "--debug" ]; then
-    for ((e=0;e<=number_count;e++)); do
-        echo "number_array[$e] = ${number_array[$e]}"
-        for ((f=0;f<=operation_count;f++)); do
-            echo "operation_array[$f] = ${operation_array[$f]}"
+    for ((d=0;d<=number_count;d++)); do
+        echo "number_array[$d] = ${number_array[$d]}"
+        for ((d=0;d<=operation_count;d++)); do
+            echo "operation_array[$d] = ${operation_array[$d]}"
         done
     done
     echo -e "number_count = ${number_count}\noperation_count = ${operation_count}"
 fi
 
-c=0
-for ((d=0;d<=final_array_count;d++)); do
-    if [ "${d}" = "${number_count}" ]; then
+e=0
+for ((f=0;f<=final_array_count;f++)); do
+    if [ "${f}" = "${number_count}" ]; then
         break
     else
-        calculation_array+=("${number_array[${c}]}")
-        if [ "${d}" == "${operation_count}" ]; then
+        calculation_array+=("${number_array[${e}]}")
+        if [ "${f}" == "${operation_count}" ]; then
             continue
         else
-            calculation_array+=("${operation_array[${c}]}")
-            c=$((c + 1))
+            calculation_array+=("${operation_array[${e}]}")
+            e=$((e + 1))
             continue
         fi
     fi
@@ -157,6 +166,7 @@ done
 
 calculation="${calculation_array[*]}"
 calculation="${calculation// /}"
+calculation="${calculation/\^/\*\*}"
 if [ "$2" == "--debug" ]; then
     echo "calculation = ${calculation}"
 fi
