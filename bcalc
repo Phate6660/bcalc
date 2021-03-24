@@ -59,15 +59,16 @@ for ((b=0;b<=final_array_count;b++)); do
         # No more looping is needed, break.
         break
     else
-        # The next 2 if statements are for dealing with brackets, which are used to signify multi-digit numbers.
+        # Check if the character is an opening parenthesis...
         if [ "${final_array[${b}]}" == "(" ]; then
             paren=true
             continue
+        # Check if the character is a closing parenthesis...
         elif [ "${final_array[${b}]}" == ")" ]; then
             paren=false
             ip="${ip[*]}"
             ip="${ip// /}"
-            ip="${ip/\^/\*\*}"
+            ip="${ip/\^/\*\*}" # Replace `^` with `**`
             ip=$(("${ip}"))
             if [ "$2" == "--debug" ]; then
                 echo "ip = ${ip}"
@@ -75,9 +76,11 @@ for ((b=0;b<=final_array_count;b++)); do
             number_array+=("$ip")
             unset ip
             continue
+        # Check if the character is an opening square bracket...
         elif [ "${final_array[${b}]}" == "[" ]; then
             multi=true
             continue
+        # Check if the character is a closing square bracket...
         elif [ "${final_array[${b}]}" == "]" ]; then
             multi=false
             mn="${mn[*]}"
@@ -90,15 +93,17 @@ for ((b=0;b<=final_array_count;b++)); do
             continue
         # If the element is a number...
         elif [[ "${final_array[${b}]}" =~ ^[0-9]+$ ]]; then
-            # If "$multi" hasn't been set, append to number_array like normal.
+            # If "$multi" or "$multi" is set...
             if [ -n "${multi}" ] || [ -n "${paren}" ]; then
-                # If "$multi is true", append the contents of the element to the mn variable.
+                # If "$paren" is true, append the contents of the element to the ip variable.
                 if [ "${paren}" == true ]; then
                     ip+=("${final_array[${b}]}")
                     continue
+                # If "$multi" is true, append the contents of the element to the mn variable.
                 elif [ "${multi}" == true ]; then
                         mn+=("${final_array[${b}]}")
                         continue
+                # Else assign it to number_array as normal.
                 else
                     number_array+=("${final_array[${b}]}")
                     continue
@@ -133,6 +138,7 @@ done
 number_count="${#number_array[@]}"
 operation_count="${#operation_array[@]}"
 
+# For some reason, the lexer add 2 blank elements to number_array.
 if [ -n "${paren}" ] || [ -n "${multi}" ]; then
     number_array=("${number_array[@]:2}")
     number_count=$((number_count - 2))
@@ -141,24 +147,25 @@ fi
 if [ "$2" == "--debug" ]; then
     for ((d=0;d<=number_count;d++)); do
         echo "number_array[$d] = ${number_array[$d]}"
-        for ((d=0;d<=operation_count;d++)); do
-            echo "operation_array[$d] = ${operation_array[$d]}"
+        for ((e=0;e<=operation_count;e++)); do
+            echo "operation_array[$e] = ${operation_array[$e]}"
         done
     done
     echo -e "number_count = ${number_count}\noperation_count = ${operation_count}"
 fi
 
-e=0
-for ((f=0;f<=final_array_count;f++)); do
-    if [ "${f}" = "${number_count}" ]; then
+# Assemble the final calculation variable.
+f=0
+for ((g=0;g<=final_array_count;g++)); do
+    if [ "${g}" = "${number_count}" ]; then
         break
     else
-        calculation_array+=("${number_array[${e}]}")
-        if [ "${f}" == "${operation_count}" ]; then
+        calculation_array+=("${number_array[${f}]}")
+        if [ "${g}" == "${operation_count}" ]; then
             continue
         else
-            calculation_array+=("${operation_array[${e}]}")
-            e=$((e + 1))
+            calculation_array+=("${operation_array[${f}]}")
+            f=$((f + 1))
             continue
         fi
     fi
