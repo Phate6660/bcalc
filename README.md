@@ -63,7 +63,7 @@ calculation = 100-50
 
 ## TODO
 
-- Better formatted ouput (perhaps `1,000,000` instead of `1000000` for example)
+- ~~Better formatted ouput (perhaps `1,000,000` instead of `1000000` for example)~~
 - ~~No hard limit on number/operator count~~
 - Support decimals
 - ~~Support PEMDAS~~ (bash had already mostly supported PEMDAS, just needed to support for parenthesis)
