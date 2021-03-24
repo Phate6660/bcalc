@@ -12,53 +12,99 @@ for ((i=0; i<${#args}; i++)); do
     args_spaces+="${args:$i:1} "
 done
 
-# Read each space-separated character into an array.
+# Read each space-separated character into the array.
 # shellcheck disable=SC2162
 read -a args_array <<< "$args_spaces"
 
-# Set empty arrays to be appended to later.
-n1_array=()
-n2_array=()
-
 # Iterate over the argument array.
-for i in "${args_array[@]}"; do
-    # Check if the operator is set, and append to the n2_array if so.
-    if [ -n "$op" ]; then
-        if [[ "$i" =~ ^[0-9]+$ ]]; then
-            n2_array+=("$i")
-        fi
+n=0
+for char in "${args_array[@]}"; do
+    # Check if "$char" is a square bracket, and if so append to final_array.
+    if [ "$char" == "[" ] || [ "$char" == "]" ]; then
+        final_array+=("$char")
+        continue
     fi
-    # Check if "$i" is a number, and if so...
-    if [[ "$i" =~ ^[0-9]+$ ]]; then
-        # If "$op" is set, continue and skip appending to n1_array.
-        if [ -n "$op" ]; then
-            continue
-        else
-            # Otherwise append the number to the array.
-            n1_array+=("$i")
-        fi
-    fi
-    # Check if "$i" is a math operation, and if so, set the "$op" var to it.
-    if [ "$i" == "*" ] || [ "$i" == "/" ] || [ "$i" == "+" ] || [ "$i" == "-" ]; then
-        if [ -n "$op" ]; then
-            echo "Only 2 numbers are supported for now." && exit 1
-        fi
-        op="$i"
+    # Check if "$char" is a number, and if so append to final_array.
+    if [[ "$char" =~ ^[0-9]+$ ]]; then
+        final_array+=("$char")
+        continue
+    # Check if "$char" is a math operation, and if so append to final_array.
+    elif [ "$char" == "*" ] || [ "$char" == "/" ] || [ "$char" == "+" ] || [ "$char" == "-" ]; then
+        # Up n by 1 before and after appending the math operation to account for array index offsets.
+        n=$((n + 1))
+        final_array+=("$char")
+        n=$((n + 1))
+        continue
+    else
+        # If the character isn't a square bracket, digit, or math operation, display an error message and exit.
+        echo "Only digits, '*', '/', '+', and '-', are supported. '$i' is currently unsupported." && exit 1
     fi
 done
 
-# The _pre variables contain all the elements of the respective number arrays.
-# Then {n1,n2} are the contents of the _pre variables with the spaces removed.
-n1_pre="${n1_array[*]}"
-n1="${n1_pre// /}"
-n2_pre="${n2_array[*]}"
-n2="${n2_pre// /}"
+final_array_count="${#final_array[@]}"
+a=0
+for ((b=0;b<=final_array_count;b++)); do
+    if [ "$b" = "$final_array_count" ]; then
+        # No more looping is needed, break.
+        break
+    else
+        # The next 2 if statements are for dealing with brackets, which are used to signify multi-digit numbers.
+        if [ "${final_array[$b]}" == "[" ]; then
+            multi=true
+            continue
+        fi
+        if [ "${final_array[$b]}" == "]" ]; then
+            multi=false
+            mn="${mn[*]}"
+            mn="${mn// /}"
+            number_array+=("$mn")
+            unset mn
+            continue
+        fi
+        # If the element is a number...
+        if [[ "${final_array[$b]}" =~ ^[0-9]+$ ]]; then
+            # If "$multi" hasn't been set, append to number_array like normal.
+            if [ -z "$multi" ]; then
+                number_array+=("${final_array[$b]}")
+                continue
+            else
+                # If "$multi is true", append the contents of the element to the mn variable.
+                if [ "$multi" == true ]; then
+                    mn+=("${final_array[$b]}")
+                    continue
+                else
+                    number_array+=("${final_array[$b]}")
+                    continue
+                fi
+            fi
+        # If the element is an operation, append to operation_array.
+        elif [ "${final_array[$b]}" == "*" ] || [ "${final_array[$b]}" == "/" ] || [ "${final_array[$b]}" == "+" ] || [ "${final_array[$b]}" == "-" ]; then
+            operation_array+=("${final_array[$b]}")
+            a=$((a + 1))
+            continue
+        fi
+    fi
+done
 
-# Case the math operation then do the actual math.
-case "$op" in
-    "*") echo $(("$n1" * "$n2"));;
-    "/") echo $(("$n1" / "$n2"));;
-    "+") echo $(("$n1" + "$n2"));;
-    "-") echo $(("$n1" - "$n2"));;
-    *) echo "Sorry, $op is not a supported operation." && exit 1;;
-esac
+number_count="${#number_array[@]}"
+operation_count="${#operation_array[@]}"
+
+c=0
+for ((d=0;d<=final_array_count;d++)); do
+    if [ "$d" = "$number_count" ]; then
+        break
+    else
+        calculation_array+=("${number_array[$c]}")
+        if [ "$d" = "$operation_count" ]; then
+            continue
+        else
+            calculation_array+=("${operation_array[$c]}")
+            c=$((c + 1))
+            continue
+        fi
+    fi
+done
+
+calculation="${calculation_array[*]}"
+calculation="${calculation// /}"
+echo $(("$calculation"))
