@@ -36,6 +36,7 @@ for i in "${args_array[@]}"; do
     if [ "$i" == "*" ] || [ "$i" == "/" ] || [ "$i" == "+" ] || [ "$i" == "-" ]; then
         if [ -n "$op" ]; then
             op2="$i"
+            continue
         fi
         op="$i"
     fi
