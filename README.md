@@ -12,6 +12,7 @@ Note: Any numbers larger than one digit need to specified in a `[]`. Examples in
 ## What's supported
 
 - Basic math operations
+- Partially supported: PEMDAS (only parenthesis)
 - Whole numbers
 
 Examples:
@@ -28,6 +29,9 @@ $ ./bcalc [100]+[100]+[100]+[100]
 
 $ ./bcalc 9-1-2-3-4
 -1
+
+$ ./bcalc '([100]+[50])/2'
+75
 ```
 
 There is also a debug mode implemented, which is useful for when the output seems wrong.
@@ -52,7 +56,13 @@ calculation = 100-50
 - Better formatted ouput (perhaps `1,000,000` instead of `1000000` for example)
 - ~~No hard limit on number/operator count~~
 - Support decimals
-- Support PEMDAS (Parenthesis, Exponents, Multiplication, Division, Addition, Subtraction) [high priority]
+- Support PEMDAS [high priority)
+  + ~~Parenthesis~~
+  + Exponents
+  + Multiplication
+  + Division
+  + Addition
+  + Subtraction
 
 Off-topic from this calculator:
 
