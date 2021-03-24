@@ -35,6 +35,7 @@ for char in "${args_array[@]}"; do
     elif [ "${char}" == "^" ] \
         || [ "${char}" == "*" ] \
         || [ "${char}" == "/" ] \
+        || [ "${char}" == "%" ] \
         || [ "${char}" == "+" ] \
         || [ "${char}" == "-" ]; then
         # Up n by 1 before and after appending the math operation to account for array index offsets.
@@ -73,7 +74,7 @@ for ((b=0;b<=final_array_count;b++)); do
             if [ "$2" == "--debug" ]; then
                 echo "ip = ${ip}"
             fi
-            number_array+=("$ip")
+            number_array+=("${ip}")
             unset ip
             continue
         # Check if the character is an opening square bracket...
@@ -88,7 +89,11 @@ for ((b=0;b<=final_array_count;b++)); do
             if [ "$2" == "--debug" ]; then
                 echo "mn = ${mn}"
             fi
-            number_array+=("${mn}")
+            if [ "${paren}" == true ]; then
+                ip+=("${mn}")
+            else 
+                number_array+=("${mn}")
+            fi
             unset mn
             continue
         # If the element is a number...
@@ -96,7 +101,7 @@ for ((b=0;b<=final_array_count;b++)); do
             # If "$multi" or "$multi" is set...
             if [ -n "${multi}" ] || [ -n "${paren}" ]; then
                 # If "$paren" is true, append the contents of the element to the ip variable.
-                if [ "${paren}" == true ]; then
+                if [ "${paren}" == true ] && [ "${multi}" == false ]; then
                     ip+=("${final_array[${b}]}")
                     continue
                 # If "$multi" is true, append the contents of the element to the mn variable.
@@ -116,14 +121,16 @@ for ((b=0;b<=final_array_count;b++)); do
         elif [ "${final_array[${b}]}" == "^" ] \
             || [ "${final_array[${b}]}" == "*" ] \
             || [ "${final_array[${b}]}" == "/" ] \
+            || [ "${final_array[${b}]}" == "%" ] \
             || [ "${final_array[${b}]}" == "+" ] \
             || [ "${final_array[${b}]}" == "-" ]; then
             if [ -n "${paren}" ]; then
-                if [ "${paren}" == true ]; then
+                if [ "${paren}" == true ] && [ "${multi}" == false ]; then
                     ip+=("${final_array[${b}]}")
                      continue
                 else
                     operation_array+=("${final_array[${b}]}")
+                    a=$((a + 1))
                     continue
                 fi
             else
@@ -137,12 +144,6 @@ done
 
 number_count="${#number_array[@]}"
 operation_count="${#operation_array[@]}"
-
-# For some reason, the lexer add 2 blank elements to number_array.
-if [ -n "${paren}" ] || [ -n "${multi}" ]; then
-    number_array=("${number_array[@]:2}")
-    number_count=$((number_count - 2))
-fi
 
 if [ "$2" == "--debug" ]; then
     for ((d=0;d<=number_count;d++)); do
@@ -177,4 +178,4 @@ calculation="${calculation/\^/\*\*}"
 if [ "$2" == "--debug" ]; then
     echo "calculation = ${calculation}"
 fi
-echo $(("${calculation}"))
+printf "%'.f\n" $(("${calculation}"))
