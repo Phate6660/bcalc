@@ -25,7 +25,7 @@ for i in "${args_array[@]}"; do
     if [[ "$i" =~ ^[0-9]+$ ]]; then
         # If "$op" is set...
         if [ -n "$op" ]; then
-            # If "$op" is set, append to "$n3_array" and continue the for loop.
+            # If "$op2" is set, append to "$n3_array" and continue the for loop.
             if [ -n "$op2" ]; then
                 n3_array+=("$i")
                 continue
