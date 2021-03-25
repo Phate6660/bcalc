@@ -9,7 +9,6 @@ I made sure to thouroughly comment the script, feel free to check it out if you'
 ## Syntax
 
 - `()` = do this first and replace with the done math
-- `[]` = denotes a multi-digit number
 - `^`  = exponent
 - `*`  = multiplication
 - `/`  = division
@@ -25,22 +24,22 @@ I made sure to thouroughly comment the script, feel free to check it out if you'
 Examples:
 
 ```
-$ ./bcalc [100]*[50]
-5000
+$ ./bcalc 100*50
+5,000
 
-$ ./bcalc [1000]/[100]
+$ ./bcalc 1000/100
 10
 
-$ ./bcalc [100]+[100]+[100]+[100]
+$ ./bcalc 100+100+100+100
 400
 
 $ ./bcalc 9-1-2-3-4
 -1
 
-$ ./bcalc '([100]+[50])/2'
+$ ./bcalc '(100+50)/2'
 75
 
-$ ./bcalc '([100]+[50])+2^2'
+$ ./bcalc '(100+50)+2^2'
 154
 ```
 
@@ -48,10 +47,11 @@ There is also a debug mode implemented, which is useful for when the output seem
 Here is an example:
 
 ```
-$ ./bcalc [100]-[50] --debug
-final_array = [ 1 0 0 ] - [ 5 0 ]
-mn = 100
-mn = 50
+$ ./bcalc 100-50 --debug
+final_array = 1 0 0 - 5 0
+mn = 1 0 0
+numbers = 100
+numbers = 50
 number_array[0] = 100
 operation_array[0] = -
 operation_array[1] =

@@ -23,10 +23,6 @@ for char in "${args_array[@]}"; do
     if [ "${char}" == "(" ] || [ "${char}" == ")" ]; then
         final_array+=("${char}")
         continue
-    # Check if "$char" is a square bracket, and if so append to final_array.
-    elif [ "${char}" == "[" ] || [ "${char}" == "]" ]; then
-        final_array+=("${char}")
-        continue
     # Check if "$char" is a number, and if so append to final_array.
     elif [[ "${char}" =~ ^[0-9]+$ ]]; then
         final_array+=("${char}")
@@ -44,8 +40,8 @@ for char in "${args_array[@]}"; do
         n=$((n + 1))
         continue
     else
-        # If the character isn't a square bracket, digit, or math operation, display an error message and exit.
-        echo -e "Only digits, parenthesis, square brackets, '*', '/', '+', and '-', are supported.\n'${char}' is currently unsupported." && exit 1
+        # If the character isn't a digit, math operation, or parenthesis, display an error message and exit.
+        echo -e "Only digits, parenthesis, '*', '/', '+', and '-', are supported.\n'${char}' is currently unsupported." && exit 1
     fi
 done
 
@@ -57,7 +53,7 @@ final_array_count="${#final_array[@]}"
 a=0
 for ((b=0;b<=final_array_count;b++)); do
     if [ "${b}" = "${final_array_count}" ]; then
-        # No more looping is needed, break.
+        # This extra part from 'numbers=' to 'unset numbers' is needed to get the last number.
         numbers="${mn[*]}"
         unset mn
         numbers="${numbers// /}"
@@ -66,6 +62,7 @@ for ((b=0;b<=final_array_count;b++)); do
         fi
         number_array+=("${numbers}")
         unset numbers
+        # No more looping is needed. Break!
         break
     else
         # Check if the character is an opening parenthesis...
@@ -91,29 +88,32 @@ for ((b=0;b<=final_array_count;b++)); do
             || [ "${final_array[${b}]}" == "%" ] \
             || [ "${final_array[${b}]}" == "+" ] \
             || [ "${final_array[${b}]}" == "-" ]; then
-            if [ "$2" == "--debug" ]; then
-                echo "mn = ${mn[*]}"
-            fi
-            numbers="${mn[*]}"
-            unset mn
-            numbers="${numbers// /}"
-            if [ "$2" == "--debug" ]; then
-                echo "numbers = ${numbers}"
-            fi
-            number_array+=("${numbers}")
-            unset numbers
-            if [ -n "${paren}" ]; then
+            if [ "${paren}" == true ]; then
                 ip+=("${final_array[${b}]}")
-                continue
             else
                 operation_array+=("${final_array[${b}]}")
                 a=$((a + 1))
+            fi
+            if [ -n "${mn}" ]; then
+                if [ "$2" == "--debug" ]; then
+                    echo "mn = ${mn[*]}"
+                fi
+                numbers="${mn[*]}"
+                unset mn
+                numbers="${numbers// /}"
+                if [ "$2" == "--debug" ]; then
+                    echo "numbers = ${numbers}"
+                fi
+                number_array+=("${numbers}")
+                unset numbers
+                continue
+            else
                 continue
             fi
         # If the element is a number...
         elif [[ "${final_array[${b}]}" =~ ^[0-9]+$ ]]; then
             # If "$paren" is set...
-            if [ -n "${paren}" ]; then
+            if [ "${paren}" == true ]; then
                  ip+=("${final_array[${b}]}")
                  continue
             else
