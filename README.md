@@ -48,7 +48,7 @@ There is also a debug mode implemented, which is useful for when the output seem
 Here is an example:
 
 ```
-$ ./bcalc [100]-[50]
+$ ./bcalc [100]-[50] --debug
 final_array = [ 1 0 0 ] - [ 5 0 ]
 number_array = 100 50
 operation_array = -
