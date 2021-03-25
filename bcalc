@@ -53,17 +53,23 @@ final_array_count="${#final_array[@]}"
 a=0
 for ((b=0;b<=final_array_count;b++)); do
     if [ "${b}" = "${final_array_count}" ]; then
-        # This extra part from 'numbers=' to 'unset numbers' is needed to get the last number.
-        numbers="${mn[*]}"
-        unset mn
-        numbers="${numbers// /}"
-        if [ "$2" == "--debug" ]; then
-            echo "numbers = ${numbers}"
+        if [ -n "${mn}" ]; then
+            if [ "$2" == "--debug" ]; then
+                echo "mn = ${mn[*]}"
+            fi
+            numbers="${mn[*]}"
+            unset mn
+            numbers="${numbers// /}"
+            if [ "$2" == "--debug" ]; then
+                echo "numbers = ${numbers}"
+            fi
+            number_array+=("${numbers}")
+            unset numbers
+            break
+        else
+            # No more looping is needed. Break!
+            break
         fi
-        number_array+=("${numbers}")
-        unset numbers
-        # No more looping is needed. Break!
-        break
     else
         # Check if the character is an opening parenthesis...
         if [ "${final_array[${b}]}" == "(" ]; then
