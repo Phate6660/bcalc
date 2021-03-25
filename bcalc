@@ -45,7 +45,7 @@ for char in "${args_array[@]}"; do
         continue
     else
         # If the character isn't a square bracket, digit, or math operation, display an error message and exit.
-        echo -e "Only digits, parenthesis, square brackets, '*', '/', '+', and '-', are supported.\n'${i}' is currently unsupported." && exit 1
+        echo -e "Only digits, parenthesis, square brackets, '*', '/', '+', and '-', are supported.\n'${char}' is currently unsupported." && exit 1
     fi
 done
 
