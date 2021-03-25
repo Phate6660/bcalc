@@ -58,6 +58,14 @@ a=0
 for ((b=0;b<=final_array_count;b++)); do
     if [ "${b}" = "${final_array_count}" ]; then
         # No more looping is needed, break.
+        numbers="${mn[*]}"
+        unset mn
+        numbers="${numbers// /}"
+        if [ "$2" == "--debug" ]; then
+            echo "numbers = ${numbers}"
+        fi
+        number_array+=("${numbers}")
+        unset numbers
         break
     else
         # Check if the character is an opening parenthesis...
@@ -69,7 +77,6 @@ for ((b=0;b<=final_array_count;b++)); do
             paren=false
             ip="${ip[*]}"
             ip="${ip// /}"
-            ip="${ip/\^/\*\*}" # Replace `^` with `**`
             ip=$(("${ip}"))
             if [ "$2" == "--debug" ]; then
                 echo "ip = ${ip}"
@@ -77,47 +84,6 @@ for ((b=0;b<=final_array_count;b++)); do
             number_array+=("${ip}")
             unset ip
             continue
-        # Check if the character is an opening square bracket...
-        elif [ "${final_array[${b}]}" == "[" ]; then
-            multi=true
-            continue
-        # Check if the character is a closing square bracket...
-        elif [ "${final_array[${b}]}" == "]" ]; then
-            multi=false
-            mn="${mn[*]}"
-            mn="${mn// /}"
-            if [ "$2" == "--debug" ]; then
-                echo "mn = ${mn}"
-            fi
-            # If there are parenthesis, append to ip (in parenthesis) variable.
-            if [ "${paren}" == true ]; then
-                ip+=("${mn}")
-            else 
-                number_array+=("${mn}")
-            fi
-            unset mn
-            continue
-        # If the element is a number...
-        elif [[ "${final_array[${b}]}" =~ ^[0-9]+$ ]]; then
-            # If "$multi" or "$paren" is set...
-            if [ -n "${multi}" ] || [ -n "${paren}" ]; then
-                # If "$paren" is true and "$multi" is false, append the contents of the element to the ip variable.
-                if [ "${paren}" == true ] && [ "${multi}" == false ]; then
-                    ip+=("${final_array[${b}]}")
-                    continue
-                # Else if "$multi" is true, append the contents of the element to the mn variable.
-                elif [ "${multi}" == true ]; then
-                        mn+=("${final_array[${b}]}")
-                        continue
-                # Else assign it to number_array as normal.
-                else
-                    number_array+=("${final_array[${b}]}")
-                    continue
-                fi
-            else
-                number_array+=("${final_array[${b}]}")
-                continue
-            fi
         # If the element is an operation, append to operation_array.
         elif [ "${final_array[${b}]}" == "^" ] \
             || [ "${final_array[${b}]}" == "*" ] \
@@ -125,18 +91,33 @@ for ((b=0;b<=final_array_count;b++)); do
             || [ "${final_array[${b}]}" == "%" ] \
             || [ "${final_array[${b}]}" == "+" ] \
             || [ "${final_array[${b}]}" == "-" ]; then
+            if [ "$2" == "--debug" ]; then
+                echo "mn = ${mn[*]}"
+            fi
+            numbers="${mn[*]}"
+            unset mn
+            numbers="${numbers// /}"
+            if [ "$2" == "--debug" ]; then
+                echo "numbers = ${numbers}"
+            fi
+            number_array+=("${numbers}")
+            unset numbers
             if [ -n "${paren}" ]; then
-                if [ "${paren}" == true ] && [ "${multi}" == false ]; then
-                    ip+=("${final_array[${b}]}")
-                     continue
-                else
-                    operation_array+=("${final_array[${b}]}")
-                    a=$((a + 1))
-                    continue
-                fi
+                ip+=("${final_array[${b}]}")
+                continue
             else
                 operation_array+=("${final_array[${b}]}")
                 a=$((a + 1))
+                continue
+            fi
+        # If the element is a number...
+        elif [[ "${final_array[${b}]}" =~ ^[0-9]+$ ]]; then
+            # If "$paren" is set...
+            if [ -n "${paren}" ]; then
+                 ip+=("${final_array[${b}]}")
+                 continue
+            else
+                mn+=("${final_array[${b}]}")
                 continue
             fi
         fi
