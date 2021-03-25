@@ -50,8 +50,19 @@ Here is an example:
 ```
 $ ./bcalc [100]-[50] --debug
 final_array = [ 1 0 0 ] - [ 5 0 ]
-number_array = 100 50
-operation_array = -
+mn = 100
+mn = 50
+number_array[0] = 100
+operation_array[0] = -
+operation_array[1] =
+number_array[1] = 50
+operation_array[0] = -
+operation_array[1] =
+number_array[2] =
+operation_array[0] = -
+operation_array[1] =
+number_count = 2
+operation_count = 1
 calculation = 100-50
 50
 ```
