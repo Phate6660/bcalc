@@ -68,6 +68,7 @@ calculation = 100-50
 ```
 
 - `final_array` = the comlpete array of characters that were inputted
+- `mn` = short for multi-digit number
 - `number_array` = an array of all the numbers
 - `operation_array` = an array of all the operations
 - `calculation` = the calculation to be used
