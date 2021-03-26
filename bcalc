@@ -6,6 +6,10 @@
 ## Created by: Phate6660 [https://github.com/Phate6660]
 ## Dependencies: Only bash ;)
 
+if [ "$2" == "--debug" ]; then
+    echo "all arguments to script = $*"
+fi
+
 # Get the first arg (since that's all we need), and add a space between each character.
 args="$1"
 for ((i=0; i<${#args}; i++)); do
@@ -41,7 +45,8 @@ for char in "${args_array[@]}"; do
         continue
     else
         # If the character isn't a digit, math operation, or parenthesis, display an error message and exit.
-        echo -e "Only digits, parenthesis, '^', '*', '/', '+', and '-', are supported.\n'${char}' is currently unsupported." && exit 1
+        echo -e "Only digits, parenthesis, '^', '*', '/', '+', and '-', are supported.\n'${char}' is currently unsupported."
+        exit 1
     fi
 done
 
@@ -162,13 +167,25 @@ for ((g=0;g<=final_array_count;g++)); do
     fi
 done
 
+# $calculation = the entire calculation array.
 calculation="${calculation_array[*]}"
+# Remove all spaces in calculation.
 calculation="${calculation// /}"
+# Replace any instances of `^` with `**`, as that is what bash uses for exponents.
 calculation="${calculation/\^/\*\*}"
 if [ "$2" == "--debug" ]; then
     echo "calculation = ${calculation}"
 fi
 
-# Print the output in a formatted way; e.g. if there are enough numbers there would be a comma.
-# Example: 1,000,000
-printf "%'.f\n" $(("${calculation}"))
+if [ -n "$2" ] && [ "$2" != "--debug" ] || [ -n "$3" ]; then
+    # Print the output in a formatted way.
+    # Note: How the output is formatted depends on the local set for `LC_NUMERIC`.
+    # Example: 1,000,000 or 1.000.000
+    printf "%'.f\n" "$((calculation))"
+    exit 0
+else
+    # Print the output without any formatting.
+    # Example: 1000000
+    echo "$((calculation))"
+    exit 0
+fi
