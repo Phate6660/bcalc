@@ -25,7 +25,7 @@ Examples:
 
 ```
 $ ./bcalc 100*50
-5,000
+5000
 
 $ ./bcalc 1000/100
 10
@@ -72,6 +72,16 @@ calculation = 100-50
 - `number_array` = an array of all the numbers
 - `operation_array` = an array of all the operations
 - `calculation` = the calculation to be used
+
+You can also supply custom formatting as a second or third arg:
+
+```
+$ ./bcalc 1000000+1000000 ,
+2,000,000
+
+./bcalc 1000000+1000000 .
+2.000.000
+```
 
 ## TODO
 

@@ -178,10 +178,10 @@ if [ "$2" == "--debug" ]; then
 fi
 
 if [ -n "$2" ] && [ "$2" != "--debug" ] || [ -n "$3" ]; then
-    output="$((calculation))"
+    output=$((calculation))
     
     for ((h=0; h<${#output}; h++)); do
-        output_spaces+="${args:${h}:1} "
+        output_spaces+="${output:${h}:1} "
     done
     
     # shellcheck disable=SC2162
