@@ -204,7 +204,8 @@ if [ -n "$2" ] && [ "$2" != "--debug" ] || [ -n "$3" ]; then
         printf "%s" "${k}"
         if [ "$2" != "--debug" ] && [ "$2" == "," ] || [ "$3" == "," ]; then
             # We need to print the formatting character after every three digits, so:
-            # IF j/3 equals 0 AND j does not equal the count of output_array minus one
+            # IF j/3 equals 0 AND j does not equal the count of output_array minus one*,
+            # (* We need to do minus one to make sure the last character placed isn't a comma)
             # THEN print the formmating character.
             if [ $((j%3)) -eq 0 ] && [ "${j}" != "$((output_array_count - 1))" ]; then
                 printf "%s" ","
