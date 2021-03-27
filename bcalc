@@ -177,25 +177,35 @@ if [ "$2" == "--debug" ]; then
     echo "calculation = ${calculation}"
 fi
 
+# Conditions are as follows;
+# IF there is a second argument AND it does not equal "--debug" OR If there is a third argument,
+# THEN format the output based on the contents of the third argument (e.g. 1,000 or 1.000),
+# ELSE print non-formatted output (e.g. 1000).
 if [ -n "$2" ] && [ "$2" != "--debug" ] || [ -n "$3" ]; then
+    # Run the calculation and save the output to the aptly named variable, "output".
     output=$((calculation))
-    
+
     for ((h=0; h<${#output}; h++)); do
         output_spaces+="${output:${h}:1} "
     done
-    
+
     # shellcheck disable=SC2162
     read -a output_array <<< "${output_spaces}"
-    
+
     if [ "$2" == "--debug" ]; then
         echo "output_array = ${output_array[*]}"
     fi
-    
+
     output_array_count="${#output_array[@]}"
     j=0
+    # Iterate over output array...
     for k in "${output_array[@]}"; do
+        # Print a single digit without a newline
         printf "%s" "${k}"
         if [ "$2" != "--debug" ] && [ "$2" == "," ] || [ "$3" == "," ]; then
+            # We need to print the formatting character after every three digits, so:
+            # IF j/3 equals 0 AND j does not equal the count of output_array minus one
+            # THEN print the formmating character.
             if [ $((j%3)) -eq 0 ] && [ "${j}" != "$((output_array_count - 1))" ]; then
                 printf "%s" ","
             fi
@@ -208,8 +218,6 @@ if [ -n "$2" ] && [ "$2" != "--debug" ] || [ -n "$3" ]; then
     done
     exit 0
 else
-    # Print the output without any formatting.
-    # Example: 1000000
     echo "$((calculation))"
     exit 0
 fi
