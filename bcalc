@@ -178,10 +178,34 @@ if [ "$2" == "--debug" ]; then
 fi
 
 if [ -n "$2" ] && [ "$2" != "--debug" ] || [ -n "$3" ]; then
-    # Print the output in a formatted way.
-    # Note: How the output is formatted depends on the local set for `LC_NUMERIC`.
-    # Example: 1,000,000 or 1.000.000
-    printf "%'.f\n" "$((calculation))"
+    output="$((calculation))"
+    
+    for ((h=0; h<${#output}; h++)); do
+        output_spaces+="${args:${h}:1} "
+    done
+    
+    # shellcheck disable=SC2162
+    read -a output_array <<< "${output_spaces}"
+    
+    if [ "$2" == "--debug" ]; then
+        echo "output_array = ${output_array[*]}"
+    fi
+    
+    output_array_count="${#output_array[@]}"
+    j=0
+    for k in "${output_array[@]}"; do
+        printf "%s" "${k}"
+        if [ "$2" != "--debug" ] && [ "$2" == "," ] || [ "$3" == "," ]; then
+            if [ $((j%3)) -eq 0 ] && [ "${j}" != "$((output_array_count - 1))" ]; then
+                printf "%s" ","
+            fi
+        elif [ "$2" != "--debug" ] && [ "$2" == "." ] || [ "$3" == "." ]; then
+            if [ $((j%3)) -eq 0 ] && [ "${j}" != "$((output_array_count - 1))" ]; then
+                printf "%s" "."
+            fi
+        fi
+        j=$((j + 1))
+    done
     exit 0
 else
     # Print the output without any formatting.
