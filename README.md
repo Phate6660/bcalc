@@ -11,6 +11,7 @@ I made sure to thouroughly comment the script, feel free to check it out if you'
 - `()` = do this first and replace with the done math
 - `^`  = exponent
 - `*`  = multiplication
+- `%`  = division with remainder
 - `/`  = division
 - `+`  = addition
 - `-`  = subtraction
