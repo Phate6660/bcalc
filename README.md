@@ -74,6 +74,16 @@ calculation = 100-50
 - `operation_array` = an array of all the operations
 - `calculation` = the calculation to be used
 
+## Tests
+
+Make sure you have [`bats`](https://github.com/bats-core/bats-core) installed from system repo or otherwise. Then run:
+
+```sh
+tests/run.sh
+# or
+path/to/bats --tap tests
+```
+
 ## TODO
 
 - ~~Better formatted ouput (perhaps `1,000,000` instead of `1000000` for example)~~

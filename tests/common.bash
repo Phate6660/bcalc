@@ -1,0 +1,3 @@
+REPO_ROOT_PATH="$PWD"
+BINARY_FILE="$PWD/bcalc"
+
