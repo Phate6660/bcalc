@@ -1,0 +1,16 @@
+#!/bin/bash
+## Tests for bcalc
+
+## Common variables used for the tests.
+exe="./bcalc"
+
+## Basic math operations.
+# Parenthesis
+expected="8"
+command="$exe '(2+2)*2'"
+result="$(eval "${command}")"
+if [ "${result}" == "${expected}" ]; then
+    echo "GOOD -- The parenthesis test has passed."
+else
+    echo "BAD -- The result of the parenthesis test is \"${result}\", when it should be \"${expected}\"."
+fi
