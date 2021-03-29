@@ -58,8 +58,36 @@ basic_divis() {
     fi
 }
 
+# Basic addition test.
+basic_addit() {
+    local expected="128"
+    local command="$exe 64+64"
+    local result="$(eval "${command}")"
+    
+    if [ "${result}" == "${expected}" ]; then
+        basic_addit_test="GOOD -- The basic addition test has passed."
+    else
+        basic_addit_test="BAD -- The result of the basic addition test is \"${result}\", when it should be \"${expected}\"."
+    fi
+}
+
+# Basic subtraction test.
+basic_subtr() {
+    local expected="256"
+    local command="$exe 384-128"
+    local result="$(eval "${command}")"
+    
+    if [ "${result}" == "${expected}" ]; then
+        basic_subtr_test="GOOD -- The basic subtraction test has passed."
+    else
+        basic_subtr_test="BAD -- The result of the basic subtraction test is \"${result}\", when it should be \"${expected}\"."
+    fi
+}
+
 ## Run the tests.
 basic_paren && echo "${basic_paren_test}"
 basic_expon && echo "${basic_expon_test}"
 basic_multi && echo "${basic_multi_test}"
 basic_divis && echo "${basic_divis_test}"
+basic_addit && echo "${basic_addit_test}"
+basic_subtr && echo "${basic_subtr_test}"
