@@ -13,10 +13,24 @@ basic_paren() {
     local result="$(eval "${command}")"
     
     if [ "${result}" == "${expected}" ]; then
-        basic_paren_test="GOOD -- The parenthesis test has passed."
+        basic_paren_test="GOOD -- The basic parenthesis test has passed."
     else
-        basic_paren_test="BAD -- The result of the parenthesis test is \"${result}\", when it should be \"${expected}\"."
+        basic_paren_test="BAD -- The result of the basic parenthesis test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
 
-basic_paren && echo "${basic_paren_test}" || echo "Failed to run the basic parenthesis test!" && exit 1
+# Exponents
+basic_expon() {
+    local expected="16"
+    local command="$exe '4^2'"
+    local result="$(eval "${command}")"
+    
+    if [ "${result}" == "${expected}" ]; then
+        basic_expon_test="GOOD -- The basic exponent test has passed."
+    else
+        basic_expon_test="BAD -- The result of the basic exponent test is \"${result}\", when it should be \"${expected}\"."
+    fi
+}
+
+basic_paren && echo "${basic_paren_test}"
+basic_expon && echo "${basic_expon_test}"
