@@ -80,6 +80,7 @@ for ((b=0;b<=final_array_count;b++)); do
             paren=false
             ip="${ip[*]}"
             ip="${ip// /}"
+            ip="${ip/\^/\*\*}"
             ip=$(("${ip}"))
             if [ "$2" == "--debug" ]; then
                 echo "ip = ${ip}"
