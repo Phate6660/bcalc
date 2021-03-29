@@ -22,7 +22,7 @@ basic_paren() {
 # Exponents
 basic_expon() {
     local expected="16"
-    local command="$exe '4^2'"
+    local command="$exe 4^2"
     local result="$(eval "${command}")"
     
     if [ "${result}" == "${expected}" ]; then
@@ -32,5 +32,19 @@ basic_expon() {
     fi
 }
 
+# Multiplication
+basic_multi() {
+    local expected="32"
+    local command="$exe 16*2"
+    local result="$(eval "${command}")"
+    
+    if [ "${result}" == "${expected}" ]; then
+        basic_multi_test="GOOD -- The basic multiplication test has passed."
+    else
+        basic_multi_test="BAD -- The result of the basic multiplication test is \"${result}\", when it should be \"${expected}\"."
+    fi
+}
+
 basic_paren && echo "${basic_paren_test}"
 basic_expon && echo "${basic_expon_test}"
+basic_multi && echo "${basic_multi_test}"
