@@ -1,6 +1,7 @@
 #!/bin/bash
 ## Tests for bcalc
 
+## Create the debug directory if it doesn't exist.
 if ! [ -d "./debug" ]; then mkdir debug; else :; fi
 
 ## Common variables used for the tests.
