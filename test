@@ -11,10 +11,12 @@ basic_paren() {
     local expected="4"
     local command="$exe '(1+1)*2'"
     local result="$(eval "${command}")"
+    local debug_file="basic_paren_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_paren_test="GOOD -- The basic parenthesis test has passed."
     else
+        eval "${command} --debug" > "${debug_file}"
         basic_paren_test="BAD -- The result of the basic parenthesis test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
@@ -24,10 +26,12 @@ basic_expon() {
     local expected="16"
     local command="$exe 4^2"
     local result="$(eval "${command}")"
+    local debug_file="basic_expon_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_expon_test="GOOD -- The basic exponent test has passed."
     else
+        eval "${command} --debug" > "${debug_file}"
         basic_expon_test="BAD -- The result of the basic exponent test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
@@ -37,10 +41,12 @@ basic_multi() {
     local expected="32"
     local command="$exe 16*2"
     local result="$(eval "${command}")"
+    local debug_file="basic_multi_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_multi_test="GOOD -- The basic multiplication test has passed."
     else
+        eval "${command} --debug" > "${debug_file}"
         basic_multi_test="BAD -- The result of the basic multiplication test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
@@ -50,10 +56,12 @@ basic_divis() {
     local expected="64"
     local command="$exe 128/2"
     local result="$(eval "${command}")"
+    local debug_file="basic_divis_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_divis_test="GOOD -- The basic division test has passed."
     else
+        eval "${command} --debug" > "${debug_file}"
         basic_divis_test="BAD -- The result of the basic division test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
@@ -63,10 +71,12 @@ basic_addit() {
     local expected="128"
     local command="$exe 64+64"
     local result="$(eval "${command}")"
+    local debug_file="basic_addit_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_addit_test="GOOD -- The basic addition test has passed."
     else
+        eval "${command} --debug" > "${debug_file}"
         basic_addit_test="BAD -- The result of the basic addition test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
@@ -76,10 +86,12 @@ basic_subtr() {
     local expected="256"
     local command="$exe 384-128"
     local result="$(eval "${command}")"
+    local debug_file="basic_subtr_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_subtr_test="GOOD -- The basic subtraction test has passed."
     else
+        eval "${command} --debug" > "${debug_file}"
         basic_subtr_test="BAD -- The result of the basic subtraction test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
@@ -90,10 +102,12 @@ basi_pemdas() {
     local expected="512"
     local command="$exe '(1256-500+500)*(1+1)'"
     local result="$(eval "${command}")"
+    local debug_file="basi_pemdas_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basi_pemdas_test="GOOD -- The basic PEMDAS test has passed."
     else
+        eval "${command} --debug" > "${debug_file}"
         basi_pemdas_test="BAD -- The result of the basic PEMDAS test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
@@ -103,10 +117,12 @@ bas_pemdas2() {
     local expected="1024"
     local command="$exe '(1256-500+500)*(1+1)*2'"
     local result="$(eval "${command}")"
+    local debug_file="bas_pemdas2_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         bas_pemdas2_test="GOOD -- The second basic PEMDAS test has passed."
     else
+        eval "${command} --debug" > "${debug_file}"
         bas_pemdas2_test="BAD -- The result of the secpmd basic PEMDAS test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
