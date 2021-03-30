@@ -17,7 +17,7 @@ basic_paren() {
         basic_paren_test="GOOD -- The basic parenthesis test has passed."
     else
         eval "${command} --debug" > "${debug_file}"
-        basic_paren_test="BAD -- The result of the basic parenthesis test is \"${result}\", when it should be \"${expected}\"."
+        basic_paren_test="BAD  -- The result of the basic parenthesis test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
 
@@ -32,7 +32,7 @@ basic_expon() {
         basic_expon_test="GOOD -- The basic exponent test has passed."
     else
         eval "${command} --debug" > "${debug_file}"
-        basic_expon_test="BAD -- The result of the basic exponent test is \"${result}\", when it should be \"${expected}\"."
+        basic_expon_test="BAD  -- The result of the basic exponent test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
 
@@ -47,7 +47,7 @@ basic_multi() {
         basic_multi_test="GOOD -- The basic multiplication test has passed."
     else
         eval "${command} --debug" > "${debug_file}"
-        basic_multi_test="BAD -- The result of the basic multiplication test is \"${result}\", when it should be \"${expected}\"."
+        basic_multi_test="BAD  -- The result of the basic multiplication test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
 
@@ -62,7 +62,7 @@ basic_divis() {
         basic_divis_test="GOOD -- The basic division test has passed."
     else
         eval "${command} --debug" > "${debug_file}"
-        basic_divis_test="BAD -- The result of the basic division test is \"${result}\", when it should be \"${expected}\"."
+        basic_divis_test="BAD  -- The result of the basic division test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
 
@@ -77,7 +77,7 @@ basic_addit() {
         basic_addit_test="GOOD -- The basic addition test has passed."
     else
         eval "${command} --debug" > "${debug_file}"
-        basic_addit_test="BAD -- The result of the basic addition test is \"${result}\", when it should be \"${expected}\"."
+        basic_addit_test="BAD  -- The result of the basic addition test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
 
@@ -92,7 +92,7 @@ basic_subtr() {
         basic_subtr_test="GOOD -- The basic subtraction test has passed."
     else
         eval "${command} --debug" > "${debug_file}"
-        basic_subtr_test="BAD -- The result of the basic subtraction test is \"${result}\", when it should be \"${expected}\"."
+        basic_subtr_test="BAD  -- The result of the basic subtraction test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
 
@@ -108,7 +108,7 @@ basi_pemdas() {
         basi_pemdas_test="GOOD -- The basic PEMDAS test has passed."
     else
         eval "${command} --debug" > "${debug_file}"
-        basi_pemdas_test="BAD -- The result of the basic PEMDAS test is \"${result}\", when it should be \"${expected}\"."
+        basi_pemdas_test="BAD  -- The result of the basic PEMDAS test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
 
@@ -123,7 +123,7 @@ bas_pemdas2() {
         bas_pemdas2_test="GOOD -- The second basic PEMDAS test has passed."
     else
         eval "${command} --debug" > "${debug_file}"
-        bas_pemdas2_test="BAD -- The result of the second basic PEMDAS test is \"${result}\", when it should be \"${expected}\"."
+        bas_pemdas2_test="BAD  -- The result of the second basic PEMDAS test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
 

@@ -88,8 +88,8 @@ GOOD -- The basic multiplication test has passed.
 GOOD -- The basic division test has passed.
 GOOD -- The basic addition test has passed.
 GOOD -- The basic subtraction test has passed.
-BAD -- The result of the basic PEMDAS test is "2,512", when it should be "512".
-BAD -- The result of the second basic PEMDAS test is "5,024", when it should be "1024".
+BAD  -- The result of the basic PEMDAS test is "2,512", when it should be "512".
+BAD  -- The result of the second basic PEMDAS test is "5,024", when it should be "1024".
 ```
 
 Whenever there is a `BAD` test result, it will log the debug output of the calculator into a file.
