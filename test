@@ -1,6 +1,8 @@
 #!/bin/bash
 ## Tests for bcalc
 
+if ! [ -d "./debug" ]; then mkdir debug; else :; fi
+
 ## Common variables used for the tests.
 exe="./bcalc"
 
@@ -11,7 +13,7 @@ basic_paren() {
     local expected="4"
     local command="$exe '(1+1)*2'"
     local result="$(eval "${command}")"
-    local debug_file="basic_paren_test-debug-output"
+    local debug_file="debug/basic_paren_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_paren_test="GOOD -- The basic parenthesis test has passed."
@@ -26,7 +28,7 @@ basic_expon() {
     local expected="16"
     local command="$exe 4^2"
     local result="$(eval "${command}")"
-    local debug_file="basic_expon_test-debug-output"
+    local debug_file="debug/basic_expon_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_expon_test="GOOD -- The basic exponent test has passed."
@@ -41,7 +43,7 @@ basic_multi() {
     local expected="32"
     local command="$exe 16*2"
     local result="$(eval "${command}")"
-    local debug_file="basic_multi_test-debug-output"
+    local debug_file="debug/basic_multi_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_multi_test="GOOD -- The basic multiplication test has passed."
@@ -56,7 +58,7 @@ basic_divis() {
     local expected="64"
     local command="$exe 128/2"
     local result="$(eval "${command}")"
-    local debug_file="basic_divis_test-debug-output"
+    local debug_file="debug/basic_divis_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_divis_test="GOOD -- The basic division test has passed."
@@ -71,7 +73,7 @@ basic_addit() {
     local expected="128"
     local command="$exe 64+64"
     local result="$(eval "${command}")"
-    local debug_file="basic_addit_test-debug-output"
+    local debug_file="debug/basic_addit_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_addit_test="GOOD -- The basic addition test has passed."
@@ -86,7 +88,7 @@ basic_subtr() {
     local expected="256"
     local command="$exe 384-128"
     local result="$(eval "${command}")"
-    local debug_file="basic_subtr_test-debug-output"
+    local debug_file="debug/basic_subtr_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basic_subtr_test="GOOD -- The basic subtraction test has passed."
@@ -102,7 +104,7 @@ basi_pemdas() {
     local expected="512"
     local command="$exe '(1256-500+500)*(1+1)'"
     local result="$(eval "${command}")"
-    local debug_file="basi_pemdas_test-debug-output"
+    local debug_file="debug/basi_pemdas_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         basi_pemdas_test="GOOD -- The basic PEMDAS test has passed."
@@ -117,7 +119,7 @@ bas_pemdas2() {
     local expected="1024"
     local command="$exe '(1256-500+500)*(1+1)*2'"
     local result="$(eval "${command}")"
-    local debug_file="bas_pemdas2_test-debug-output"
+    local debug_file="debug/bas_pemdas2_test-debug-output"
     
     if [ "${result}" == "${expected}" ]; then
         bas_pemdas2_test="GOOD -- The second basic PEMDAS test has passed."

@@ -7,4 +7,4 @@
 [._]sw[a-p]
 
 # Debug files created by the test script
-*debug*
+debug/
