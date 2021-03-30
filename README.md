@@ -74,6 +74,28 @@ calculation = 100-50
 - `operation_array` = an array of all the operations
 - `calculation` = the calculation to be used
 
+## Testing
+
+There is a script provided (`test`) which will test the calculator to make sure it's functioning properly.
+
+Example output:
+
+```
+$ ./test
+GOOD -- The basic parenthesis test has passed.
+GOOD -- The basic exponent test has passed.
+GOOD -- The basic multiplication test has passed.
+GOOD -- The basic division test has passed.
+GOOD -- The basic addition test has passed.
+GOOD -- The basic subtraction test has passed.
+BAD -- The result of the basic PEMDAS test is "2,512", when it should be "512".
+BAD -- The result of the second basic PEMDAS test is "5,024", when it should be "1024".
+```
+
+Whenever there is a `BAD` test result, it will log the debug output of the calculator into a file.
+
+For example, if the basic PEMDAS test failed, there will be a file called `basi_pemdas_test-debug-output`.
+
 ## TODO
 
 - ~~Better formatted ouput (perhaps `1,000,000` instead of `1000000` for example)~~

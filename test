@@ -123,7 +123,7 @@ bas_pemdas2() {
         bas_pemdas2_test="GOOD -- The second basic PEMDAS test has passed."
     else
         eval "${command} --debug" > "${debug_file}"
-        bas_pemdas2_test="BAD -- The result of the secpmd basic PEMDAS test is \"${result}\", when it should be \"${expected}\"."
+        bas_pemdas2_test="BAD -- The result of the second basic PEMDAS test is \"${result}\", when it should be \"${expected}\"."
     fi
 }
 
