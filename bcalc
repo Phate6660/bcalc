@@ -82,6 +82,10 @@ for ((b=0;b<=final_array_count;b++)); do
             ip="${ip// /}"
             ip="${ip/\^/\*\*}"
             if [[ "${ip}" == *-* ]]; then
+                # BASH isn't fully respecting PEMDAS,
+                # so I split the input based on '-' as a delimiter.
+                # I then calculate each side of the '-' before subtracting
+                # the right side from the left site.
                 IFS='-' read -ra ip_split <<< "$ip"
                 first=$((ip_split[0]))
                 second=$((ip_split[1]))
@@ -178,4 +182,5 @@ if [ "$2" == "--debug" ]; then
     echo "calculation = ${calculation}"
 fi
 
+# Output the result of the calculation without any formatting.
 echo $((calculation))
