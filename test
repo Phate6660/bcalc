@@ -2,7 +2,7 @@
 ## Tests for bcalc
 
 ## Create the debug directory if it doesn't exist.
-if ! [ -d "./debug" ]; then mkdir debug; else :; fi
+if ! [ -d "./debug" ]; then mkdir debug; fi
 
 ## Common variables used for the tests.
 exe="./bcalc"
