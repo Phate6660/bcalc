@@ -81,7 +81,15 @@ for ((b=0;b<=final_array_count;b++)); do
             ip="${ip[*]}"
             ip="${ip// /}"
             ip="${ip/\^/\*\*}"
-            ip=$(("${ip}"))
+            if [[ "${ip}" == *-* ]]; then
+                IFS='-' read -ra ip_split <<< "$ip"
+                first=$((ip_split[0]))
+                second=$((ip_split[1]))
+                ip=$((first - second))
+                unset first second
+            else
+                ip=$(("${ip}"))
+            fi
             if [ "$2" == "--debug" ]; then
                 echo "ip = ${ip}"
             fi
@@ -170,6 +178,4 @@ if [ "$2" == "--debug" ]; then
     echo "calculation = ${calculation}"
 fi
 
-# Print the output in a formatted way; e.g. if there are enough numbers there would be a comma.
-# Example: 1,000,000
-printf "%'.f\n" $(("${calculation}"))
+echo $((calculation))
