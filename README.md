@@ -94,10 +94,6 @@ BAD  -- The result of the second basic PEMDAS test is "5,024", when it should be
     (A debug file is available at 'debug/bas_pemdas2_test-debug-output'.)
 ```
 
-Whenever there is a `BAD` test result, it will log the debug output of the calculator into a file.
-
-For example, if the basic PEMDAS test failed, there will be a file called `basi_pemdas_test-debug-output`.
-
 ## TODO
 
 - ~~Better formatted ouput (perhaps `1,000,000` instead of `1000000` for example)~~
