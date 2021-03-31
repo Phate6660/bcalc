@@ -48,27 +48,36 @@ There is also a debug mode implemented, which is useful for when the output seem
 Here is an example:
 
 ```
-$ ./bcalc 100-50 --debug
-final_array = 1 0 0 - 5 0
+$ ./bcalc '(100+100-100)+100' --debug
+final_array = ( 1 0 0 + 1 0 0 - 1 0 0 ) + 1 0 0
+ip_split = 100+100 100
+ip_split[0] = 100+100
+first = 200
+ip_split[1] = 100
+second = 100
+ip = 100
 mn = 1 0 0
 numbers = 100
-numbers = 50
 number_array[0] = 100
-operation_array[0] = -
+operation_array[0] = +
 operation_array[1] =
-number_array[1] = 50
-operation_array[0] = -
+number_array[1] = 100
+operation_array[0] = +
 operation_array[1] =
 number_array[2] =
-operation_array[0] = -
+operation_array[0] = +
 operation_array[1] =
 number_count = 2
 operation_count = 1
-calculation = 100-50
-50
+calculation = 100+100
+200
 ```
 
 - `final_array` = the comlpete array of characters that were inputted
+- `ip_split` = if what's in parenthesis contains a `-`, split based on that into an array
+- `first` = the first calculation to be done before the subtraction (first - second)
+- `second` = the second calculation to be done before the subtraction
+- `ip` = anything in this array is what is inside parenthesis
 - `mn` = short for multi-digit number
 - `number_array` = an array of all the numbers
 - `operation_array` = an array of all the operations
