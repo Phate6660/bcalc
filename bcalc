@@ -1,6 +1,6 @@
 #!/bin/bash
 ## A calculator in pure-bash.
-## I even made a pure-bash lexer for this.
+## I even made a pure-bash lexer and parser for this.
 ## Not gonna lie I feel pretty accomplished right now.
 ## ---------------------------------------------------
 ## Created by: Phate6660 [https://github.com/Phate6660]
