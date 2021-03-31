@@ -6,6 +6,7 @@
 ## Created by: Phate6660 [https://github.com/Phate6660]
 ## Dependencies: Only bash ;)
 
+## Argument Gathering and Preparation
 # Get the first arg (since that's all we need), and add a space between each character.
 args="$1"
 for ((i=0; i<${#args}; i++)); do
@@ -16,6 +17,7 @@ done
 # shellcheck disable=SC2162
 read -a args_array <<< "${args_spaces}"
 
+## Lexing
 # Iterate over the argument array.
 n=0
 for char in "${args_array[@]}"; do
@@ -49,6 +51,7 @@ if [ "$2" == "--debug" ]; then
     echo "final_array = ${final_array[*]}"
 fi
 
+## Parsing
 final_array_count="${#final_array[@]}"
 a=0
 for ((b=0;b<=final_array_count;b++)); do
@@ -167,6 +170,7 @@ if [ "$2" == "--debug" ]; then
     echo -e "number_count = ${number_count}\noperation_count = ${operation_count}"
 fi
 
+## Finishing Touches
 # Assemble the final calculation variable.
 f=0
 for ((g=0;g<=final_array_count;g++)); do
@@ -191,5 +195,6 @@ if [ "$2" == "--debug" ]; then
     echo "calculation = ${calculation}"
 fi
 
+## Output
 # Output the result of the calculation without any formatting.
 echo $((calculation))
