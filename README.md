@@ -92,6 +92,9 @@ GOOD -- The basic PEMDAS test has passed.
 GOOD -- The second basic PEMDAS test has passed.
 ```
 
+If a test fails, it will display the result and what was expected.<br>
+It will also output a respective debug file for the test to `debug/`.
+
 ## TODO
 
 - ~~Better formatted ouput (perhaps `1,000,000` instead of `1000000` for example)~~
