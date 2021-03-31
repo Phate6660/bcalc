@@ -87,8 +87,17 @@ for ((b=0;b<=final_array_count;b++)); do
                 # I then calculate each side of the '-' before subtracting
                 # the right side from the left site.
                 IFS='-' read -ra ip_split <<< "$ip"
+                if [ "$2" == "--debug" ]; then
+                    echo "ip_split = ${ip_split[*]}"
+                fi
                 first=$((ip_split[0]))
+                if [ "$2" == "--debug" ]; then
+                    echo -e "ip_split[0] = ${ip_split[0]}\nfirst = ${first}"
+                fi
                 second=$((ip_split[1]))
+                if [ "$2" == "--debug" ]; then
+                    echo -e "ip_split[1] = ${ip_split[1]}\nsecond = ${second}"
+                fi
                 ip=$((first - second))
                 unset first second
             else
