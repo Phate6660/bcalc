@@ -88,10 +88,8 @@ GOOD -- The basic multiplication test has passed.
 GOOD -- The basic division test has passed.
 GOOD -- The basic addition test has passed.
 GOOD -- The basic subtraction test has passed.
-BAD  -- The result of the basic PEMDAS test is "2,512", when it should be "512".
-    (A debug file is available at 'debug/basi_pemdas_test-debug-output'.)
-BAD  -- The result of the second basic PEMDAS test is "5,024", when it should be "1024".
-    (A debug file is available at 'debug/bas_pemdas2_test-debug-output'.)
+GOOD -- The basic PEMDAS test has passed.
+GOOD -- The second basic PEMDAS test has passed.
 ```
 
 ## TODO
