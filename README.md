@@ -2,9 +2,11 @@
 
 A calculator written in pure bash.
 
-I even managed to write a lexer for the argument input, allowing you to do `1+1` instead of `1 + 1`.
+I even managed to write a lexer for the argument input,<br>
+allowing you to do `1+1` instead of `1 + 1`.
 
-I made sure to thouroughly comment the script, feel free to check it out if you're interested!
+I made sure to thouroughly comment the script,<br>
+feel free to check it out if you're interested!
 
 ## Syntax
 
@@ -44,7 +46,9 @@ $ ./bcalc '(100+50)+2^2'
 154
 ```
 
-There is also a debug mode implemented, which is useful for when the output seems wrong.
+There is also a debug mode implemented,<br>
+which is useful for when the output seems wrong.
+
 Here is an example:
 
 ```
@@ -85,7 +89,8 @@ calculation = 100+100
 
 ## Testing
 
-There is a script provided (`test`) which will test the calculator to make sure it's functioning properly.
+There is a script provided (`test`),<br>
+which will test the calculator to make sure it's functioning properly.
 
 Example output:
 
