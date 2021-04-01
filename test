@@ -12,7 +12,7 @@ exe="./bcalc"
 basic_paren() {
     # Local to keep them in the function.
     local expected="4"
-    local command="$exe '(1+1)*2'"
+    local command="${exe} '(1+1)*2'"
     local result="$(eval "${command}")"
     local debug_file="debug/basic_paren_test-debug-output"
     
@@ -27,7 +27,7 @@ basic_paren() {
 # Basic exponent test.
 basic_expon() {
     local expected="16"
-    local command="$exe 4^2"
+    local command="${exe} 4^2"
     local result="$(eval "${command}")"
     local debug_file="debug/basic_expon_test-debug-output"
     
@@ -42,7 +42,7 @@ basic_expon() {
 # Basic multiplication test.
 basic_multi() {
     local expected="32"
-    local command="$exe 16*2"
+    local command="${exe} 16*2"
     local result="$(eval "${command}")"
     local debug_file="debug/basic_multi_test-debug-output"
     
@@ -57,7 +57,7 @@ basic_multi() {
 # Basic division test.
 basic_divis() {
     local expected="64"
-    local command="$exe 128/2"
+    local command="${exe} 128/2"
     local result="$(eval "${command}")"
     local debug_file="debug/basic_divis_test-debug-output"
     
@@ -72,7 +72,7 @@ basic_divis() {
 # Basic addition test.
 basic_addit() {
     local expected="128"
-    local command="$exe 64+64"
+    local command="${exe} 64+64"
     local result="$(eval "${command}")"
     local debug_file="debug/basic_addit_test-debug-output"
     
@@ -87,7 +87,7 @@ basic_addit() {
 # Basic subtraction test.
 basic_subtr() {
     local expected="256"
-    local command="$exe 384-128"
+    local command="${exe} 384-128"
     local result="$(eval "${command}")"
     local debug_file="debug/basic_subtr_test-debug-output"
     
@@ -103,7 +103,7 @@ basic_subtr() {
 # Basic PEMDAS test.
 basi_pemdas() {
     local expected="512"
-    local command="$exe '(1256-500+500)*(1+1)'"
+    local command="${exe} '(1256-500+500)*(1+1)'"
     local result="$(eval "${command}")"
     local debug_file="debug/basi_pemdas_test-debug-output"
     
@@ -118,7 +118,7 @@ basi_pemdas() {
 # Basic PEMDAS test 2.
 bas_pemdas2() {
     local expected="1024"
-    local command="$exe '(1256-500+500)*(1+1)*2'"
+    local command="${exe} '(1256-500+500)*(1+1)*2'"
     local result="$(eval "${command}")"
     local debug_file="debug/bas_pemdas2_test-debug-output"
     
@@ -127,6 +127,22 @@ bas_pemdas2() {
     else
         eval "bash -x ${command} --debug" &> "${debug_file}"
         bas_pemdas2_test="BAD  -- The result of the second basic PEMDAS test is \"${result}\", when it should be \"${expected}\".\n    (A debug file is available at '${debug_file}'.)"
+    fi
+}
+
+## Error message tests.
+# Notation error.
+error_notat() {
+    local expected="Currently other notations are unsupported, please start with a number."
+    local command="${exe} +11"
+    local result="$(eval "${command}")"
+    local debug_file="debug/error_notat_test-debug-output"
+
+    if [ "${result}" == "${expected}" ]; then
+        error_notat_test="GOOD -- The error test for notations passed."
+    else
+        eval "bash -x ${command} --debug" &> "${debug_file}"
+        error_notat_test="BAD  -- The result of the error test for notations is \"${result}\", when it should be \"${expected}\".\n    (A debug file is available at '${debug_file}'.)"
     fi
 }
 
@@ -139,3 +155,4 @@ basic_addit && echo -e "${basic_addit_test}"
 basic_subtr && echo -e "${basic_subtr_test}"
 basi_pemdas && echo -e "${basi_pemdas_test}"
 bas_pemdas2 && echo -e "${bas_pemdas2_test}"
+error_notat && echo -e "${error_notat_test}"

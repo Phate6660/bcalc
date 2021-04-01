@@ -122,7 +122,7 @@ for ((b=0;b<=final_array_count;b++)); do
             || [ "${final_array[${b}]}" == "+" ] \
             || [ "${final_array[${b}]}" == "-" ]; then
             if [ "${b}" == 0 ]; then
-                echo "Currently another notations are unsupported, please start with a number." && exit 1
+                echo "Currently other notations are unsupported, please start with a number." && exit 1
             fi
             if [ -n "$op_found" ]; then
                 echo "You may not have more than one operation between numbers." && exit 1
