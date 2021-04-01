@@ -91,7 +91,7 @@ for ((b=0;b<=final_array_count;b++)); do
                 # so I split the input based on '-' as a delimiter.
                 # I then calculate each side of the '-' before subtracting
                 # the right side from the left site.
-                IFS='-' read -ra ip_split <<< "$ip"
+                IFS='-' read -ra ip_split <<< "${ip}"
                 if [ "$2" == "--debug" ]; then
                     echo "ip_split = ${ip_split[*]}"
                 fi
@@ -124,7 +124,7 @@ for ((b=0;b<=final_array_count;b++)); do
             if [ "${b}" == 0 ]; then
                 echo "Currently other notations are unsupported, please start with a number." && exit 1
             fi
-            if [ -n "$op_found" ]; then
+            if [ -n "${op_found}" ]; then
                 echo "You may not have more than one operation between numbers." && exit 1
             fi
             op_found=true
@@ -171,9 +171,9 @@ operation_count="${#operation_array[@]}"
 if [ "$2" == "--debug" ]; then
     # This is useful for seeing the contents of each index of the number_array and operation_array variables.
     for ((d=0;d<=number_count;d++)); do
-        echo "number_array[$d] = ${number_array[$d]}"
+        echo "number_array[${d}] = ${number_array[${d}]}"
         for ((e=0;e<=operation_count;e++)); do
-            echo "operation_array[$e] = ${operation_array[$e]}"
+            echo "operation_array[${e}] = ${operation_array[${e}]}"
         done
     done
     # This is useful to make sure that the counts in the arrays are accurate to what they should be.
