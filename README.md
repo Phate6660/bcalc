@@ -2,7 +2,7 @@
 
 A calculator written in pure bash.
 
-I even managed to write a lexer for the argument input,<br>
+I even managed to write a lexer and parser for the argument input,<br>
 allowing you to do `1+1` instead of `1 + 1`.
 
 I made sure to thouroughly comment the script,<br>
