@@ -104,6 +104,7 @@ GOOD -- The basic addition test has passed.
 GOOD -- The basic subtraction test has passed.
 GOOD -- The basic PEMDAS test has passed.
 GOOD -- The second basic PEMDAS test has passed.
+GOOD -- The error test for notations passed.
 ```
 
 If a test fails, it will display the result and what was expected.<br>
