@@ -76,10 +76,12 @@ for ((b=0;b<=final_array_count;b++)); do
     else
         # Check if the character is an opening parenthesis...
         if [ "${final_array[${b}]}" == "(" ]; then
+            unset op_found
             paren=true
             continue
         # Check if the character is a closing parenthesis...
         elif [ "${final_array[${b}]}" == ")" ]; then
+            unset op_found
             paren=false
             ip="${ip[*]}"
             ip="${ip// /}"
@@ -119,6 +121,10 @@ for ((b=0;b<=final_array_count;b++)); do
             || [ "${final_array[${b}]}" == "%" ] \
             || [ "${final_array[${b}]}" == "+" ] \
             || [ "${final_array[${b}]}" == "-" ]; then
+            if [ -n "$op_found" ]; then
+                echo "You may not have more than one operation between numbers." && exit 1
+            fi
+            op_found=true
             if [ "${paren}" == true ]; then
                 ip+=("${final_array[${b}]}")
             else
@@ -143,6 +149,7 @@ for ((b=0;b<=final_array_count;b++)); do
             fi
         # If the element is a number...
         elif [[ "${final_array[${b}]}" =~ ^[0-9]+$ ]]; then
+            unset op_found
             # If "$paren" is set...
             if [ "${paren}" == true ]; then
                  ip+=("${final_array[${b}]}")
