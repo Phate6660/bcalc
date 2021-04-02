@@ -77,7 +77,7 @@ calculation = 100+100
 200
 ```
 
-- `final_array` = the comlpete array of characters that were inputted
+- `final_array` = the complete array of characters that were inputted
 - `ip_split` = if what's in parenthesis contains a `-`, split based on that into an array
 - `first` = the first calculation to be done before the subtraction (first - second)
 - `second` = the second calculation to be done before the subtraction
