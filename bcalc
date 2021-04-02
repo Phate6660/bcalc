@@ -122,11 +122,18 @@ for ((b=0;b<=final_array_count;b++)); do
             || [ "${final_array[${b}]}" == "+" ] \
             || [ "${final_array[${b}]}" == "-" ]; then
             if [ "${b}" == 0 ]; then
-                echo "Currently other notations are unsupported, please start with a number." && exit 1
+                if [ "${final_array[${b}]}" == "-" ]; then
+                    # Do nothing, skipping the error. It's a negative number so it's all good.
+                    negative_first=true
+                else
+                    echo "Currently other notations are unsupported, please start with a number." && exit 1
+                fi
             fi
+            
             if [ -n "${op_found}" ]; then
                 echo "You may not have more than one operation between numbers." && exit 1
             fi
+            
             op_found=true
             if [ "${paren}" == true ]; then
                 ip+=("${final_array[${b}]}")
@@ -187,13 +194,24 @@ for ((g=0;g<=final_array_count;g++)); do
     if [ "${g}" = "${number_count}" ]; then
         break
     else
-        calculation_array+=("${number_array[${f}]}")
-        if [ "${g}" == "${operation_count}" ]; then
-            continue
-        else
+        if [ -n "${negative_first}" ]; then
             calculation_array+=("${operation_array[${f}]}")
-            f=$((f + 1))
-            continue
+            if [ "${g}" == "${operation_count}" ]; then
+                continue
+            else
+                calculation_array+=("${number_array[${f}]}")
+                f=$((f + 1))
+                continue
+            fi
+        else
+            calculation_array+=("${number_array[${f}]}")
+            if [ "${g}" == "${operation_count}" ]; then
+                continue
+            else
+                calculation_array+=("${operation_array[${f}]}")
+                f=$((f + 1))
+                continue
+            fi
         fi
     fi
 done
