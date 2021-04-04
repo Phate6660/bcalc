@@ -178,7 +178,10 @@ operation_count="${#operation_array[@]}"
 # Example for this snippet:
 # `./bcalc 1+1+` would break the script.
 # Adding this outputs an error message and gracefully exits.
-if [ "${operation_count}" -ge "${number_count}" ]; then
+if [ "${negative_first}" == true ] && [ "${operation_count}" -gt "${number_count}" ]; then
+    echo "The count of operations shouldn't be greater than the count of numbers."
+    exit 1
+elif [ -z "${negative_first}" ] && [ "${operation_count}" -ge "${number_count}" ]; then
     echo "The count of operations shouldn't be greater than or equal to the count of numbers."
     exit 1
 fi
