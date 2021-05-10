@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ## A calculator in pure-bash.
 ## I even made a pure-bash lexer and parser for this.
 ## Not gonna lie I feel pretty accomplished right now.
@@ -178,9 +178,13 @@ operation_count="${#operation_array[@]}"
 # Example for this snippet:
 # `./bcalc 1+1+` would break the script.
 # Adding this outputs an error message and gracefully exits.
+#
+# If the first number is a negative, the amount of operations shouldn't be more than the amount of numbers.
 if [ "${negative_first}" == true ] && [ "${operation_count}" -gt "${number_count}" ]; then
     echo "The count of operations shouldn't be greater than the count of numbers."
     exit 1
+# If the first number is NOT is a negative number, then the amount of operations shouldn't be
+# greater than or equal to the amount of numbers.
 elif [ -z "${negative_first}" ] && [ "${operation_count}" -ge "${number_count}" ]; then
     echo "The count of operations shouldn't be greater than or equal to the count of numbers."
     exit 1
