@@ -6,21 +6,50 @@
 ## Created by: Phate6660 [https://github.com/Phate6660]
 ## Dependencies: Only bash ;)
 
+if [ -z "${2}" ]; then
+    DEBUG=false
+else
+    DEBUG=true
+fi
+
 ## Argument Gathering and Preparation
 # Get the first arg (since that's all we need), and add a space between each character.
-args="$1"
-for ((i=0; i<${#args}; i++)); do
-    args_spaces+="${args:${i}:1} "
+
+# Prints a debug message.
+debug() {
+    local message="${1}"
+    if ${DEBUG}; then
+        printf "%s\n" "${message}"
+    fi
+}
+
+# Debugs an array by looping over it and printing each element.
+debug_array() {
+    local name="${1}"
+    local count="${2}"
+    declare -a array
+    for arg in "${@:3}"; do
+        array+=("${arg}")
+    done
+    for ((index=0;index<=count;index++)); do
+        debug "${name}[${index}] = ${array[${index}]}"
+    done
+}
+
+args="${1}"
+args_count="${#args}"
+for ((char_index=0; char_index<args_count; char_index++)); do
+    chars_spaces+="${args:${char_index}:1} "
 done
 
 # Read each space-separated character into the array.
 # shellcheck disable=SC2162
-read -a args_array <<< "${args_spaces}"
+read -a chars_array <<< "${chars_spaces}"
 
 ## Lexing
 # Iterate over the argument array.
-n=0
-for char in "${args_array[@]}"; do
+tmp_counter=0
+for char in "${chars_array[@]}"; do
     # Check if "$char" is a parenthesis, and if so append to final_array.
     if [ "${char}" == "(" ] || [ "${char}" == ")" ]; then
         final_array+=("${char}")
@@ -37,35 +66,29 @@ for char in "${args_array[@]}"; do
         || [ "${char}" == "+" ] \
         || [ "${char}" == "-" ]; then
         # Up n by 1 before and after appending the math operation to account for array index offsets.
-        n=$((n + 1))
+        tmp_counter=$((tmp_counter + 1))
         final_array+=("${char}")
-        n=$((n + 1))
+        tmp_counter=$((tmp_counter + 1))
         continue
     else
         # If the character isn't a digit, math operation, or parenthesis, display an error message and exit.
-        echo -e "Only digits, parenthesis, '^', '*', '%', '/', '+', and '-', are supported.\n'${char}' is currently unsupported." && exit 1
+        printf "Only digits, parenthesis, '^', '*', '%%', '/', '+', and '-', are supported.\n'%s' is currently unsupported.\n" "${char}"
+        exit 1
     fi
 done
 
-if [ "$2" == "--debug" ]; then
-    echo "final_array = ${final_array[*]}"
-fi
+final_array_count="${#final_array[@]}"
+debug_array "final_array" "${final_array_count}" "${final_array[@]}"
 
 ## Parsing
-final_array_count="${#final_array[@]}"
-a=0
-for ((b=0;b<=final_array_count;b++)); do
-    if [ "${b}" = "${final_array_count}" ]; then
+for ((index=0;index<=final_array_count;index++)); do
+    if [ "${index}" == "${final_array_count}" ]; then
         if [ -n "${mn}" ]; then
-            if [ "$2" == "--debug" ]; then
-                echo "mn = ${mn[*]}"
-            fi
+            debug "mn = ${mn}"
             numbers="${mn[*]}"
             unset mn
             numbers="${numbers// /}"
-            if [ "$2" == "--debug" ]; then
-                echo "numbers = ${numbers}"
-            fi
+            debug "numbers = ${numbers}"
             number_array+=("${numbers}")
             unset numbers
             break
@@ -75,12 +98,12 @@ for ((b=0;b<=final_array_count;b++)); do
         fi
     else
         # Check if the character is an opening parenthesis...
-        if [ "${final_array[${b}]}" == "(" ]; then
+        if [ "${final_array[${index}]}" == "(" ]; then
             unset op_found
             paren=true
             continue
         # Check if the character is a closing parenthesis...
-        elif [ "${final_array[${b}]}" == ")" ]; then
+        elif [ "${final_array[${index}]}" == ")" ]; then
             unset op_found
             paren=false
             ip="${ip[*]}"
@@ -92,65 +115,51 @@ for ((b=0;b<=final_array_count;b++)); do
                 # I then calculate each side of the '-' before subtracting
                 # the right side from the left site.
                 IFS='-' read -ra ip_split <<< "${ip}"
-                if [ "$2" == "--debug" ]; then
-                    echo "ip_split = ${ip_split[*]}"
-                fi
+                debug "ip_split = ${ip_split[*]}"
                 first=$((ip_split[0]))
-                if [ "$2" == "--debug" ]; then
-                    echo -e "ip_split[0] = ${ip_split[0]}\nfirst = ${first}"
-                fi
                 second=$((ip_split[1]))
-                if [ "$2" == "--debug" ]; then
-                    echo -e "ip_split[1] = ${ip_split[1]}\nsecond = ${second}"
-                fi
                 ip=$((first - second))
                 unset first second
             else
                 ip=$(("${ip}"))
             fi
-            if [ "$2" == "--debug" ]; then
-                echo "ip = ${ip}"
-            fi
+            debug "ip = ${ip}"
             number_array+=("${ip}")
             unset ip
             continue
         # If the element is an operation, append to operation_array.
-        elif [ "${final_array[${b}]}" == "^" ] \
-            || [ "${final_array[${b}]}" == "*" ] \
-            || [ "${final_array[${b}]}" == "/" ] \
-            || [ "${final_array[${b}]}" == "%" ] \
-            || [ "${final_array[${b}]}" == "+" ] \
-            || [ "${final_array[${b}]}" == "-" ]; then
-            if [ "${b}" == 0 ]; then
-                if [ "${final_array[${b}]}" == "-" ]; then
+        elif [ "${final_array[${index}]}" == "^" ] \
+            || [ "${final_array[${index}]}" == "*" ] \
+            || [ "${final_array[${index}]}" == "/" ] \
+            || [ "${final_array[${index}]}" == "%" ] \
+            || [ "${final_array[${index}]}" == "+" ] \
+            || [ "${final_array[${index}]}" == "-" ]; then
+            if [ "${index}" == 0 ]; then
+                if [ "${final_array[${index}]}" == "-" ]; then
                     # Do nothing, skipping the error. It's a negative number so it's all good.
                     negative_first=true
                 else
-                    echo "Currently other notations are unsupported, please start with a number." && exit 1
+                    printf "Currently other notations are unsupported, please start with a number."
+                    exit 1
                 fi
             fi
             
             if [ -n "${op_found}" ]; then
-                echo "You may not have more than one operation between numbers." && exit 1
+                printf "You may not have more than one operation between numbers." && exit 1
             fi
             
             op_found=true
-            if [ "${paren}" == true ]; then
-                ip+=("${final_array[${b}]}")
+            if "${paren}"; then
+                ip+=("${final_array[${index}]}")
             else
-                operation_array+=("${final_array[${b}]}")
-                a=$((a + 1))
+                operation_array+=("${final_array[${index}]}")
             fi
             if [ -n "${mn}" ]; then
-                if [ "$2" == "--debug" ]; then
-                    echo "mn = ${mn[*]}"
-                fi
+                debug "mn = ${mn[*]}"
                 numbers="${mn[*]}"
                 unset mn
                 numbers="${numbers// /}"
-                if [ "$2" == "--debug" ]; then
-                    echo "numbers = ${numbers}"
-                fi
+                debug "numbers = ${numbers}"
                 number_array+=("${numbers}")
                 unset numbers
                 continue
@@ -158,14 +167,14 @@ for ((b=0;b<=final_array_count;b++)); do
                 continue
             fi
         # If the element is a number...
-        elif [[ "${final_array[${b}]}" =~ ^[0-9]+$ ]]; then
+        elif [[ "${final_array[${index}]}" =~ ^[0-9]+$ ]]; then
             unset op_found
             # If "$paren" is set...
             if [ "${paren}" == true ]; then
-                 ip+=("${final_array[${b}]}")
+                 ip+=("${final_array[${index}]}")
                  continue
             else
-                mn+=("${final_array[${b}]}")
+                mn+=("${final_array[${index}]}")
                 continue
             fi
         fi
@@ -180,51 +189,47 @@ operation_count="${#operation_array[@]}"
 # Adding this outputs an error message and gracefully exits.
 #
 # If the first number is a negative, the amount of operations shouldn't be more than the amount of numbers.
-if [ "${negative_first}" == true ] && [ "${operation_count}" -gt "${number_count}" ]; then
-    echo "The count of operations shouldn't be greater than the count of numbers."
+if ${negative_first} && ((operation_count > number_count)); then
+    printf "The count of operations shouldn't be greater than the count of numbers."
     exit 1
 # If the first number is NOT is a negative number, then the amount of operations shouldn't be
 # greater than or equal to the amount of numbers.
-elif [ -z "${negative_first}" ] && [ "${operation_count}" -ge "${number_count}" ]; then
-    echo "The count of operations shouldn't be greater than or equal to the count of numbers."
+elif [ -z "${negative_first}" ] && ((operation_count >= number_count)); then
+    printf "The count of operations shouldn't be greater than or equal to the count of numbers."
     exit 1
 fi
 
-if [ "$2" == "--debug" ]; then
-    # This is useful for seeing the contents of each index of the number_array and operation_array variables.
-    for ((d=0;d<=number_count;d++)); do
-        echo "number_array[${d}] = ${number_array[${d}]}"
-        for ((e=0;e<=operation_count;e++)); do
-            echo "operation_array[${e}] = ${operation_array[${e}]}"
-        done
-    done
-    # This is useful to make sure that the counts in the arrays are accurate to what they should be.
-    echo -e "number_count = ${number_count}\noperation_count = ${operation_count}"
-fi
+# This is useful for seeing the contents of each index of the number_array and operation_array variables.
+debug_array "number_array" "${number_count}" "${number_array[@]}"
+debug_array "operation_array" "${operation_count}" "${operation_array[@]}"
+
+# This is useful to make sure that the counts in the arrays are accurate to what they should be.
+debug "number_count = ${number_count}"
+debug "operation_count = ${operation_count}"
 
 ## Finishing Touches
 # Assemble the final calculation variable.
-f=0
-for ((g=0;g<=final_array_count;g++)); do
-    if [ "${g}" = "${number_count}" ]; then
+index=0
+for ((loop_count=0;loop_count<=final_array_count;loop_count++)); do
+    if [ "${loop_count}" = "${number_count}" ]; then
         break
     else
         if [ -n "${negative_first}" ]; then
-            calculation_array+=("${operation_array[${f}]}")
-            if [ "${g}" == "${operation_count}" ]; then
+            calculation_array+=("${operation_array[${index}]}")
+            if [ "${loop_count}" == "${operation_count}" ]; then
                 continue
             else
-                calculation_array+=("${number_array[${f}]}")
-                f=$((f + 1))
+                calculation_array+=("${number_array[${index}]}")
+                index=$((index + 1))
                 continue
             fi
         else
-            calculation_array+=("${number_array[${f}]}")
-            if [ "${g}" == "${operation_count}" ]; then
+            calculation_array+=("${number_array[${index}]}")
+            if [ "${loop_count}" == "${operation_count}" ]; then
                 continue
             else
-                calculation_array+=("${operation_array[${f}]}")
-                f=$((f + 1))
+                calculation_array+=("${operation_array[${index}]}")
+                index=$((index + 1))
                 continue
             fi
         fi
@@ -234,10 +239,8 @@ done
 calculation="${calculation_array[*]}"
 calculation="${calculation// /}"
 calculation="${calculation/\^/\*\*}"
-if [ "$2" == "--debug" ]; then
-    echo "calculation = ${calculation}"
-fi
+debug "calculation = ${calculation}"
 
 ## Output
 # Output the result of the calculation without any formatting.
-echo $((calculation))
+printf "%d\n" $((calculation))
