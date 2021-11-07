@@ -6,10 +6,15 @@
 ## Created by: Phate6660 [https://github.com/Phate6660]
 ## Dependencies: Only bash ;)
 
-if [ -z "${2}" ]; then
-    DEBUG=false
-else
-    DEBUG=true
+DEBUG=false
+FORMATTED=false
+if [ -n "${2}" ]; then
+    if [ "${2}" == "--debug" ]; then
+        DEBUG=true
+    fi
+    if [ "${2}" == "--formatted" ] || [ "${3}" == "--formatted" ]; then
+        FORMATTED=true
+    fi
 fi
 
 ## Argument Gathering and Preparation
@@ -243,4 +248,8 @@ debug "calculation = ${calculation}"
 
 ## Output
 # Output the result of the calculation without any formatting.
-printf "%d\n" $((calculation))
+if ${FORMATTED}; then
+    printf "%'d\n" $((calculation))
+else
+    printf "%d\n" $((calculation))
+fi
