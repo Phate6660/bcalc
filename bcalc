@@ -154,7 +154,7 @@ for ((index=0;index<=final_array_count;index++)); do
             fi
             
             op_found=true
-            if "${paren}"; then
+            if ${paren}; then
                 ip+=("${final_array[${index}]}")
             else
                 operation_array+=("${final_array[${index}]}")
